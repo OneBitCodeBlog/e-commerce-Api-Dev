@@ -4,6 +4,6 @@ class Product < ApplicationRecord
   validates :price, presence: true, numericality: true
   
   belongs_to :productable, polymorphic: true
-  has_many :product_categories
+  has_many :product_categories, dependent: :destroy
   has_many :categories, through: :product_categories
 end
