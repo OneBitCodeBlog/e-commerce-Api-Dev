@@ -8,8 +8,9 @@ module RequestAPI
 
   def auth_header(user = nil, merge_with: {})
     user ||= create(:user)
-    auth_header = user.create_new_auth_token
-    merge_with.merge auth_header
+    auth = user.create_new_auth_token
+    header = auth.merge({ 'Content-Type' => 'application/json', 'Accept' => 'application/json' })
+    merge_with.merge header
   end
 end
 
