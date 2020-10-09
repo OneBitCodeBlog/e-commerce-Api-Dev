@@ -13,6 +13,9 @@ gem 'puma', '~> 4.1'
 # Auth
 gem 'devise_token_auth', '~> 1.1.4'
 
+# Rendering
+gem 'jbuilder', '~> 2.10.1'
+
 group :development, :test do
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
   gem 'factory_bot_rails'
