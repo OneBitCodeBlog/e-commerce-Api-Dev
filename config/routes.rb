@@ -1,9 +1,10 @@
 Rails.application.routes.draw do
   mount_devise_token_auth_for 'User', at: 'auth/v1/user'
   
-  namespace :admin do
+  namespace :admin, defaults: { format: :json } do
     namespace :v1 do
       get "home" => "home#index"
+      resources :categories
     end
   end
 
