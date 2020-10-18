@@ -1,7 +1,10 @@
 class Product < ApplicationRecord
+  has_one_attached :image
+
   validates :name, presence: true, uniqueness: { case_sensitive: false }
   validates :description, presence: true
   validates :price, presence: true, numericality: true
+  validates :image, presence: true
   
   belongs_to :productable, polymorphic: true
   has_many :product_categories, dependent: :destroy
