@@ -10,7 +10,7 @@ module RequestAPI
     user ||= create(:user)
     auth = user.create_new_auth_token
     header = auth.merge({ 'Content-Type' => 'application/json', 'Accept' => 'application/json' })
-    merge_with.merge header
+    header.merge merge_with
   end
 end
 
