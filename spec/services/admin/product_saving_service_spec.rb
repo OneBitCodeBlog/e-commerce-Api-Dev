@@ -7,7 +7,7 @@ RSpec.describe Admin::ProductSavingService, type: :model do
       
       context "with valid params" do
         let!(:game) { product.productable }
-        let(:params) { { name: "New product", developer: "New company" } }
+        let(:params) { { name: "New product", productable_attributes: { developer: "New company" } } }
 
         it "updates product" do
           service = described_class.new(params, product)
@@ -48,7 +48,7 @@ RSpec.describe Admin::ProductSavingService, type: :model do
       end
   
       context "with invalid :productable params" do
-        let(:game_params) { attributes_for(:game, developer: "") }
+        let(:game_params) { { productable_attributes: attributes_for(:game, developer: "") } }
 
         it "raises NotSavedProductError" do
           expect {
@@ -77,7 +77,7 @@ RSpec.describe Admin::ProductSavingService, type: :model do
       context "with valid params" do
         let(:game_params) { attributes_for(:game, system_requirement_id: system_requirement.id) }
         let(:product_params) { attributes_for(:product, productable: "game") }
-        let(:params) { product_params.merge(game_params) }
+        let(:params) { product_params.merge(productable_attributes: game_params) }
       
         it "creates a new product" do
           expect {
@@ -103,7 +103,7 @@ RSpec.describe Admin::ProductSavingService, type: :model do
       context "with invalid :product params" do
         let(:product_params) { attributes_for(:product, name: "", productable: "game") }
         let(:game_params) { attributes_for(:game, system_requirement_id: system_requirement.id) }
-        let(:params) { product_params.merge(game_params) }
+        let(:params) { product_params.merge(productable_attributes: game_params) }
 
         it "raises NotSavedProductError" do
           expect {
@@ -133,7 +133,7 @@ RSpec.describe Admin::ProductSavingService, type: :model do
       context "with invalid :productable params" do
         let(:product_params) { attributes_for(:product, productable: "Game") }
         let(:game_params) { attributes_for(:game, developer: "", system_requirement_id: system_requirement.id) }
-        let(:params) { product_params.merge(game_params) }
+        let(:params) { product_params.merge(productable_attributes: game_params) }
 
         it "raises NotSavedProductError" do
           expect {

@@ -5,31 +5,25 @@ module Admin
     attr_reader :product, :errors
 
     def initialize(params, product = nil)
-      @params = params.deep_symbolize_keys
+      params = params.deep_symbolize_keys
+      @product_params = params.reject { |key| key == :productable_attributes }
+      @productable_params = params[:productable_attributes] || {}
       @errors = {}
-      @product = product
-      @product ||= Product.new
+      @product = product || Product.new
     end
 
     def call
       Product.transaction do
-        @product.attributes = filter_from_params(@product.attribute_names)
+        @product.attributes = @product_params.reject { |key| key == :productable }
         build_productable
       ensure
         save!
       end
     end
-
-    def filter_from_params(attributes)
-      attributes = attributes.map(&:to_sym)
-      @params.select do |key, _|
-        attributes.include?(key)
-      end
-    end
     
     def build_productable
-      @product.productable ||= @params[:productable].camelcase.safe_constantize.new
-      @product.productable.attributes = filter_from_params(@product.productable.attribute_names)
+      @product.productable ||= @product_params[:productable].camelcase.safe_constantize.new
+      @product.productable.attributes = @productable_params
     end
 
     def save!
