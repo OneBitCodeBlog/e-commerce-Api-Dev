@@ -27,27 +27,28 @@ RSpec.describe "Admin V1 Products as :admin", type: :request do
     let(:url) { "/admin/v1/products" }
     let(:category) { create(:category) }
     let(:system_requirement) { create(:system_requirement) }
+    let(:post_header) { auth_header(user, merge_with: { 'Content-Type' => 'multipart/form-data' }) }
     
     context "with valid params" do
       let(:game_params) { attributes_for(:game, system_requirement_id: system_requirement.id) }
       let(:product_params) do 
-        { product: attributes_for(:product).merge(productable: "game").merge(game_params) }.to_json
+        { product: attributes_for(:product).merge(productable: "game").merge(game_params) }
       end
 
       it 'adds a new Product' do
         expect do
-          post url, headers: auth_header(user), params: product_params
+          post url, headers: post_header, params: product_params
         end.to change(Product, :count).by(1)
       end
 
       it 'adds a new productable' do
         expect do
-          post url, headers: auth_header(user), params: product_params
+          post url, headers: post_header, params: product_params
         end.to change(Game, :count).by(1)
       end
 
       it 'returns last added Product' do
-        post url, headers: auth_header(user), params: product_params
+        post url, headers: post_header, params: product_params
         product_attributes = %i(id name description price)
         game_attributes = %i(mode release_date developer)
         expected_product = build_product_json(Product.last, product_attributes, game_attributes)
@@ -55,7 +56,7 @@ RSpec.describe "Admin V1 Products as :admin", type: :request do
       end
 
       it 'returns success status' do
-        post url, headers: auth_header(user), params: product_params
+        post url, headers: post_header, params: product_params
         expect(response).to have_http_status(:ok)
       end
     end
@@ -63,28 +64,28 @@ RSpec.describe "Admin V1 Products as :admin", type: :request do
     context "with invalid Product params" do
       let(:game_params) { attributes_for(:game, system_requirement_id: system_requirement.id) }
       let(:product_invalid_params) do 
-        { product: attributes_for(:product, name: nil).merge(productable: "game").merge(game_params) }.to_json
+        { product: attributes_for(:product, name: nil).merge(productable: "game").merge(game_params) }
       end
 
       it 'does not add a new Product' do
         expect do
-          post url, headers: auth_header(user), params: product_invalid_params
+          post url, headers: post_header, params: product_invalid_params
         end.to_not change(Product, :count)
       end
 
       it 'does not add a new productable' do
         expect do
-          post url, headers: auth_header(user), params: product_invalid_params
+          post url, headers: post_header, params: product_invalid_params
         end.to_not change(Game, :count)
       end
 
       it 'returns error message' do
-        post url, headers: auth_header(user), params: product_invalid_params
+        post url, headers: post_header, params: product_invalid_params
         expect(body_json['errors']['fields']).to have_key('name')
       end
 
       it 'returns unprocessable_entity status' do
-        post url, headers: auth_header(user), params: product_invalid_params
+        post url, headers: post_header, params: product_invalid_params
         expect(response).to have_http_status(:unprocessable_entity)
       end
     end
@@ -92,56 +93,56 @@ RSpec.describe "Admin V1 Products as :admin", type: :request do
     context "with invalid :productable params" do
       let(:game_params) { attributes_for(:game, developer: "", system_requirement_id: system_requirement.id) }
       let(:invalid_productable_params) do 
-        { product: attributes_for(:product).merge(productable: "game").merge(game_params) }.to_json
+        { product: attributes_for(:product).merge(productable: "game").merge(game_params) }
       end
 
       it 'does not add a new Product' do
         expect do
-          post url, headers: auth_header(user), params: invalid_productable_params
+          post url, headers: post_header, params: invalid_productable_params
         end.to_not change(Product, :count)
       end
 
       it 'does not add a new productable' do
         expect do
-          post url, headers: auth_header(user), params: invalid_productable_params
+          post url, headers: post_header, params: invalid_productable_params
         end.to_not change(Game, :count)
       end
 
       it 'returns error message' do
-        post url, headers: auth_header(user), params: invalid_productable_params
+        post url, headers: post_header, params: invalid_productable_params
         expect(body_json['errors']['fields']).to have_key('developer')
       end
 
       it 'returns unprocessable_entity status' do
-        post url, headers: auth_header(user), params: invalid_productable_params
+        post url, headers: post_header, params: invalid_productable_params
         expect(response).to have_http_status(:unprocessable_entity)
       end
     end
 
     context "without :productable params" do
       let(:product_without_productable_params) do
-        { product: attributes_for(:product) }.to_json
+        { product: attributes_for(:product) }
       end
 
       it 'does not add a new Product' do
         expect do
-          post url, headers: auth_header(user), params: product_without_productable_params
+          post url, headers: post_header, params: product_without_productable_params
         end.to_not change(Product, :count)
       end
 
       it 'does not add a new productable' do
         expect do
-          post url, headers: auth_header(user), params: product_without_productable_params
+          post url, headers: post_header, params: product_without_productable_params
         end.to_not change(Game, :count)
       end
 
       it 'returns error message' do
-        post url, headers: auth_header(user), params: product_without_productable_params
+        post url, headers: post_header, params: product_without_productable_params
         expect(body_json['errors']['fields']).to have_key('productable')
       end
 
       it 'returns unprocessable_entity status' do
-        post url, headers: auth_header(user), params: product_without_productable_params
+        post url, headers: post_header, params: product_without_productable_params
         expect(response).to have_http_status(:unprocessable_entity)
       end
     end
@@ -151,21 +152,22 @@ RSpec.describe "Admin V1 Products as :admin", type: :request do
     let(:product) { create(:product) }
     let(:system_requirement) { create(:system_requirement) }
     let(:url) { "/admin/v1/products/#{product.id}" }
+    let(:patch_header) { auth_header(user, merge_with: { 'Content-Type' => 'multipart/form-data' }) }
 
     context "with valid Product params" do
       let(:new_name) { 'New name' }
       let(:product_params) do 
-        { product: attributes_for(:product, name: new_name) }.to_json
+        { product: attributes_for(:product, name: new_name) }
       end
 
       it 'updates Product' do
-        patch url, headers: auth_header(user), params: product_params
+        patch url, headers: patch_header, params: product_params
         product.reload
         expect(product.name).to eq new_name
       end
 
       it 'returns updated Product' do
-        patch url, headers: auth_header(user), params: product_params
+        patch url, headers: patch_header, params: product_params
         product.reload
         product_attributes = %i(id name description price)
         game_attributes = %i(mode release_date developer)
@@ -174,53 +176,53 @@ RSpec.describe "Admin V1 Products as :admin", type: :request do
       end
 
       it 'returns success status' do
-        patch url, headers: auth_header(user), params: product_params
+        patch url, headers: patch_header, params: product_params
         expect(response).to have_http_status(:ok)
       end
     end
 
     context "with invalid Product params" do
       let(:product_invalid_params) do 
-        { product: attributes_for(:product, name: nil) }.to_json
+        { product: attributes_for(:product, name: nil) }
       end
 
       it 'does not update Product' do
         old_name = product.name
-        patch url, headers: auth_header(user), params: product_invalid_params
+        patch url, headers: patch_header, params: product_invalid_params
         product.reload
         expect(product.name).to eq old_name
       end
 
       it 'returns error message' do
-        patch url, headers: auth_header(user), params: product_invalid_params
+        patch url, headers: patch_header, params: product_invalid_params
         expect(body_json['errors']['fields']).to have_key('name')
       end
 
       it 'returns unprocessable_entity status' do
-        patch url, headers: auth_header(user), params: product_invalid_params
+        patch url, headers: patch_header, params: product_invalid_params
         expect(response).to have_http_status(:unprocessable_entity)
       end
     end
 
     context "with invalid :productable params" do
       let(:invalid_productable_params) do 
-        { product: attributes_for(:game, developer: "") }.to_json
+        { product: attributes_for(:game, developer: "") }
       end
 
       it 'does not update productable' do
         old_developer = product.productable.developer
-        patch url, headers: auth_header(user), params: invalid_productable_params
+        patch url, headers: patch_header, params: invalid_productable_params
         product.productable.reload
         expect(product.productable.developer).to eq old_developer
       end
 
       it 'returns error message' do
-        patch url, headers: auth_header(user), params: invalid_productable_params
+        patch url, headers: patch_header, params: invalid_productable_params
         expect(body_json['errors']['fields']).to have_key('developer')
       end
 
       it 'returns unprocessable_entity status' do
-        patch url, headers: auth_header(user), params: invalid_productable_params
+        patch url, headers: patch_header, params: invalid_productable_params
         expect(response).to have_http_status(:unprocessable_entity)
       end
     end
@@ -228,17 +230,17 @@ RSpec.describe "Admin V1 Products as :admin", type: :request do
     context "without :productable params" do
       let(:new_name) { 'New name' }
       let(:product_without_productable_params) do
-        { product: attributes_for(:product, name: new_name) }.to_json
+        { product: attributes_for(:product, name: new_name) }
       end
 
       it 'updates Product' do
-        patch url, headers: auth_header(user), params: product_without_productable_params
+        patch url, headers: patch_header, params: product_without_productable_params
         product.reload
         expect(product.name).to eq new_name
       end
 
       it 'returns updated Product' do
-        patch url, headers: auth_header(user), params: product_without_productable_params
+        patch url, headers: patch_header, params: product_without_productable_params
         product.reload
         product_attributes = %i(id name description price)
         game_attributes = %i(mode release_date developer)
@@ -247,7 +249,7 @@ RSpec.describe "Admin V1 Products as :admin", type: :request do
       end
 
       it 'returns success status' do
-        patch url, headers: auth_header(user), params: product_without_productable_params
+        patch url, headers: patch_header, params: product_without_productable_params
         expect(response).to have_http_status(:ok)
       end
     end
@@ -299,6 +301,7 @@ end
 
 def build_product_json(product, attributes, productable_attributes)
   json = product.as_json(only: attributes)
+  json['image_url'] = rails_blob_url(product.image)
   json['productable'] = product.productable_type.underscore
   json.merge product.productable.as_json(only: productable_attributes)
 end

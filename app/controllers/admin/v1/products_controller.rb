@@ -44,7 +44,7 @@ module Admin::V1
 
     def product_params
       return {} unless params.has_key?(:product)
-      permitted_params = params.require(:product).permit(:id, :name, :description, :price, :productable)
+      permitted_params = params.require(:product).permit(:id, :name, :description, :image, :price, :productable)
       permitted_params.merge(productable_params)
     end
 
@@ -58,7 +58,8 @@ module Admin::V1
     def productable_params
       productable_type = params[:product][:productable] || @product&.productable_type&.underscore
       return unless productable_type.present?
-      send("#{productable_type}_params")
+      productable_attributes = send("#{productable_type}_params")
+      { productable_attributes: productable_attributes }
     end
 
     def game_params
