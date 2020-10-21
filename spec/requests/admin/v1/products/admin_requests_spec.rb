@@ -14,7 +14,7 @@ RSpec.describe "Admin V1 Products as :admin", type: :request do
       expected_return = products.map do |product| 
         build_product_json(product, product_attributes, game_attributes)
       end
-      expect(body_json['products']).to eq expected_return
+      expect(body_json['products']).to contain_exactly *expected_return
     end
 
     it "returns success status" do
