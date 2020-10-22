@@ -6,4 +6,7 @@ RSpec.describe Category, type: :model do
 
   it { is_expected.to have_many(:product_categories).dependent(:destroy) }
   it { is_expected.to have_many(:products).through(:product_categories) }
+
+  it_behaves_like "name searchable concern", :category
+  it_behaves_like "paginatable concern", :category
 end

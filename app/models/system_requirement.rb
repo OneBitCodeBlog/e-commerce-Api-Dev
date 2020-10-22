@@ -1,4 +1,7 @@
 class SystemRequirement < ApplicationRecord
+  include NameSearchable
+  include Paginatable
+  
   validates :name, presence: true, uniqueness: { case_sensitive: false }
   validates :operational_system, presence: true
   validates :storage, presence: true

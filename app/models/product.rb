@@ -1,4 +1,7 @@
 class Product < ApplicationRecord
+  include NameSearchable
+  include Paginatable
+  
   has_one_attached :image
 
   validates :name, presence: true, uniqueness: { case_sensitive: false }
