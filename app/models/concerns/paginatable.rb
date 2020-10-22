@@ -6,10 +6,10 @@ module Paginatable
 
   included do
     scope :paginate, -> (page, length) do
-      start_at = (page || DEFAULT_PAGE).to_i - 1
-      length ||= MAX_PER_PAGE
-      offset = start_at * length
-      limit(length).offset(offset)
+      page = page.present? && page > 0 ? page : DEFAULT_PAGE
+      length = length.present? && length > 0 ? length : MAX_PER_PAGE
+      starts_at = (page - 1) * length
+      limit(length).offset(starts_at)
     end
   end
-end
+end 
