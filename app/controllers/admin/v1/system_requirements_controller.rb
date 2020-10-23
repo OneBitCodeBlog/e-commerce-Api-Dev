@@ -3,7 +3,8 @@ module Admin::V1
     before_action :load_system_requirement, only: [:update, :destroy]
 
     def index
-      @system_requirements = SystemRequirement.all
+      permitted = params.permit({ search: :name }, { order: {} }, :page, :length)
+      @system_requirements = Admin::ModelLoadingService.new(SystemRequirement.all, permitted).call
     end
 
     def create
