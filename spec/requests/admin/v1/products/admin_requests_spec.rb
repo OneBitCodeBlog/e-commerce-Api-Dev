@@ -5,21 +5,100 @@ RSpec.describe "Admin V1 Products as :admin", type: :request do
 
   context "GET /products" do
     let(:url) { "/admin/v1/products" }
-    let!(:products) { create_list(:product, 5) }
-    
-    it "returns all Products with additional data for each :productable" do
-      get url, headers: auth_header(user)
-      product_attributes = %i(id name description price)
-      game_attributes = %i(mode release_date developer)
-      expected_return = products.map do |product| 
-        build_product_json(product, product_attributes, game_attributes)
+    let!(:products) { create_list(:product, 10) }
+
+    context "without any params" do
+      it "returns 10 records" do
+        get url, headers: auth_header(user)
+        expect(body_json['products'].count).to eq 10
       end
-      expect(body_json['products']).to contain_exactly *expected_return
+      
+      it "returns Products with :productable following default pagination" do
+        get url, headers: auth_header(user)
+        product_attributes = %i(id name description price)
+        game_attributes = %i(mode release_date developer)
+        expected_return = products[0..9].map do |product| 
+          build_product_json(product, product_attributes, game_attributes)
+        end
+        expect(body_json['products']).to contain_exactly *expected_return
+      end
+
+      it "returns success status" do
+        get url, headers: auth_header(user)
+        expect(response).to have_http_status(:ok)
+      end
     end
 
-    it "returns success status" do
-      get url, headers: auth_header(user)
-      expect(response).to have_http_status(:ok)
+    context "with search[name] param" do
+      let!(:search_name_products) do
+        products = [] 
+        15.times { |n| products << create(:product, name: "Search #{n + 1}") }
+        products 
+      end
+
+      let(:search_params) { { search: { name: "Search" } } }
+
+      it "returns only seached products limited by default pagination ordered by :created_at" do
+        get url, headers: auth_header(user), params: search_params
+        product_attributes = %i(id name description price)
+        game_attributes = %i(mode release_date developer)
+        expected_return = search_name_products[0..9].map do |product|
+          build_product_json(product, product_attributes, game_attributes)
+        end
+        expect(body_json['products']).to contain_exactly *expected_return
+      end
+
+      it "returns success status" do
+        get url, headers: auth_header(user), params: search_params
+        expect(response).to have_http_status(:ok)
+      end
+    end
+
+    context "with pagination params" do
+      let(:page) { 2 }
+      let(:length) { 5 }
+
+      let(:pagination_params) { { page: page, length: length } }
+
+      it "returns records sized by :length" do
+        get url, headers: auth_header(user), params: pagination_params
+        expect(body_json['products'].count).to eq length
+      end
+      
+      it "returns products limited by pagination ordered by :created_at" do
+        get url, headers: auth_header(user), params: pagination_params
+        product_attributes = %i(id name description price)
+        game_attributes = %i(mode release_date developer)
+        expected_return = products[5..9].map do |product|
+          build_product_json(product, product_attributes, game_attributes)
+        end
+        expect(body_json['products']).to contain_exactly *expected_return
+      end
+
+      it "returns success status" do
+        get url, headers: auth_header(user), params: pagination_params
+        expect(response).to have_http_status(:ok)
+      end
+    end
+
+    context "with order params" do
+      let(:order_params) { { order: { name: 'desc' } } }
+
+      it "returns ordered products limited by default pagination" do
+        get url, headers: auth_header(user), params: order_params
+        products.sort! { |a, b| b[:name] <=> a[:name] }
+        product_attributes = %i(id name description price)
+        game_attributes = %i(mode release_date developer)
+        expected_return = products[0..9].map do |product|
+          build_product_json(product, product_attributes, game_attributes)
+        end
+        expect(body_json['products']).to contain_exactly *expected_return
+      end
+ 
+      it "returns success status" do
+        get url, headers: auth_header(user), params: order_params
+        expect(response).to have_http_status(:ok)
+      end
     end
   end
 
