@@ -3,7 +3,8 @@ module Admin::V1
     before_action :load_user, only: [:update, :destroy]
 
     def index
-      @users = User.all
+      permitted = params.permit({ search: :name }, { order: {} }, :page, :length)
+      @users = Admin::ModelLoadingService.new(User.all, permitted).call
     end
 
     def create
