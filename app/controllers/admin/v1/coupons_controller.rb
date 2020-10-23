@@ -3,7 +3,8 @@ module Admin::V1
     before_action :load_coupon, only: [:update, :destroy]
     
     def index
-      @coupons = Coupon.all
+      permitted = params.permit({ search: :name }, { order: {} }, :page, :length)
+      @coupons = Admin::ModelLoadingService.new(Coupon.all, permitted).call
     end
 
     def create
