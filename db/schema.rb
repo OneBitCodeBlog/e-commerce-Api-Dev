@@ -10,32 +10,28 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-<<<<<<< Updated upstream
-ActiveRecord::Schema.define(version: 2020_10_28_011712) do
-=======
-<<<<<<< Updated upstream
-ActiveRecord::Schema.define(version: 2020_10_25_173829) do
-=======
-ActiveRecord::Schema.define(version: 2020_10_28_105913) do
->>>>>>> Stashed changes
->>>>>>> Stashed changes
+ActiveRecord::Schema.define(version: 2020_10_28_194540) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
-<<<<<<< Updated upstream
-=======
-<<<<<<< Updated upstream
-=======
->>>>>>> Stashed changes
   create_table "categories", force: :cascade do |t|
     t.string "name"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
   end
 
-<<<<<<< Updated upstream
-=======
+  create_table "products", force: :cascade do |t|
+    t.string "name"
+    t.string "description"
+    t.decimal "price", precision: 10, scale: 2
+    t.string "productable_type", null: false
+    t.bigint "productable_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["productable_type", "productable_id"], name: "index_products_on_productable_type_and_productable_id"
+  end
+
   create_table "system_requirements", force: :cascade do |t|
     t.string "name"
     t.string "operational_system"
@@ -47,8 +43,6 @@ ActiveRecord::Schema.define(version: 2020_10_28_105913) do
     t.datetime "updated_at", precision: 6, null: false
   end
 
->>>>>>> Stashed changes
->>>>>>> Stashed changes
   create_table "users", force: :cascade do |t|
     t.string "provider", default: "email", null: false
     t.string "uid", default: "", null: false
