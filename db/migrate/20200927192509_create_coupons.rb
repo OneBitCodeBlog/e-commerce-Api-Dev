@@ -4,7 +4,7 @@ class CreateCoupons < ActiveRecord::Migration[6.0]
       t.string :name
       t.string :code
       t.integer :status
-      t.decimal :discount_value, precision: 10, scale: 2
+      t.decimal :discount_value, precision: 5, scale: 2
       t.integer :max_use
       t.datetime :due_date
 
