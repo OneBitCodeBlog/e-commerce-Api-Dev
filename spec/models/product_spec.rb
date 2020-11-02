@@ -13,4 +13,7 @@ RSpec.describe Product, type: :model do
   it { is_expected.to validate_presence_of(:price) }
   it { is_expected.to validate_numericality_of(:price).is_greater_than(0) }
   it { is_expected.to validate_presence_of(:image) }
+
+  it_behaves_like "name searchable concern", :product
+  it_behaves_like "paginatable concern", :product
 end
