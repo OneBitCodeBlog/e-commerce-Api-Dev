@@ -13,7 +13,7 @@ RSpec.describe "Admin V1 Categories as :admin", type: :request do
         expect(body_json['categories'].count).to eq 10
       end
       
-      it "returns 10 first Categories ordered by :created_at" do
+      it "returns 10 first Categories" do
         get url, headers: auth_header(user)
         expected_categories = categories[0..9].as_json(only: %i(id name))
         expect(body_json['categories']).to contain_exactly *expected_categories
@@ -34,7 +34,7 @@ RSpec.describe "Admin V1 Categories as :admin", type: :request do
 
       let(:search_params) { { search: { name: "Search" } } }
 
-      it "returns only seached categories limited by default pagination ordered by :created_at" do
+      it "returns only seached categories limited by default pagination" do
         get url, headers: auth_header(user), params: search_params
         expected_categories = search_name_categories[0..9].map do |category|
           category.as_json(only: %i(id name))
@@ -59,7 +59,7 @@ RSpec.describe "Admin V1 Categories as :admin", type: :request do
         expect(body_json['categories'].count).to eq length
       end
       
-      it "returns categories limited by pagination ordered by :created_at" do
+      it "returns categories limited by pagination" do
         get url, headers: auth_header(user), params: pagination_params
         expected_categories = categories[5..9].as_json(only: %i(id name))
         expect(body_json['categories']).to contain_exactly *expected_categories

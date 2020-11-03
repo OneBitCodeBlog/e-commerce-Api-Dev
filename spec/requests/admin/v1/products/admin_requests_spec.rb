@@ -38,7 +38,7 @@ RSpec.describe "Admin V1 Products as :admin", type: :request do
 
       let(:search_params) { { search: { name: "Search" } } }
 
-      it "returns only seached products limited by default pagination ordered by :created_at" do
+      it "returns only seached products limited by default pagination" do
         get url, headers: auth_header(user), params: search_params
         product_attributes = %i(id name description price)
         game_attributes = %i(mode release_date developer)
@@ -65,7 +65,7 @@ RSpec.describe "Admin V1 Products as :admin", type: :request do
         expect(body_json['products'].count).to eq length
       end
       
-      it "returns products limited by pagination ordered by :created_at" do
+      it "returns products limited by pagination" do
         get url, headers: auth_header(user), params: pagination_params
         product_attributes = %i(id name description price)
         game_attributes = %i(mode release_date developer)
