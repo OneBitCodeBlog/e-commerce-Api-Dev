@@ -37,7 +37,7 @@ describe Admin::ModelLoadingService do
         expect(result_categories.count).to eq 10
       end
 
-      it "returns first 10 records ordered by :created_at" do
+      it "returns first 10 records" do
         service = described_class.new(Category.all, nil)
         result_categories = service.call
         expected_categories = categories[0..9]
