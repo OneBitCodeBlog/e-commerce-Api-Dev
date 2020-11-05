@@ -13,7 +13,6 @@ RSpec.describe "Admin V1 Categories without authentication", type: :request do
 
   context "POST /categories" do
     let(:url) { "/admin/v1/categories" }
-    let(:categories) { attributes_for(:category) }
     
     before(:each) { post url }
     

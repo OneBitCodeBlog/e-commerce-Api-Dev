@@ -14,7 +14,6 @@ RSpec.describe "Admin V1 Categories as :client", type: :request do
 
   context "POST /categories" do
     let(:url) { "/admin/v1/categories" }
-    let(:categories) { attributes_for(:category) }
     
     before(:each) { post url, headers: auth_header(user) }
 

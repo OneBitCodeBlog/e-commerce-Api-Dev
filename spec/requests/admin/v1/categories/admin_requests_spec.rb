@@ -90,7 +90,6 @@ RSpec.describe "Admin V1 Categories as :admin", type: :request do
 
   context "POST /categories" do
     let(:url) { "/admin/v1/categories" }
-    let(:categories) { attributes_for(:category) }
     
     context "with valid params" do
       let(:category_params) { { category: attributes_for(:category) }.to_json }
