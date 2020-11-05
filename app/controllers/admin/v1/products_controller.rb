@@ -21,7 +21,7 @@ module Admin::V1
     def destroy
       @product.productable.destroy!
       @product.destroy!
-    rescue Admin::ProductSavingService::NotSavedProductError
+    rescue ActiveRecord::RecordNotDestroyed
       render_error(fields: @product.errors.messages.merge(@product.productable.errors.messages))
     end
 
