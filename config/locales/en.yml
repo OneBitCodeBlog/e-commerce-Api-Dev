@@ -1,5 +1,0 @@
-en:
-  activerecord:
-    errors:
-      messages:
-        future_date: "should be a future date"
