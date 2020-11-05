@@ -27,15 +27,14 @@ module Admin::V1
 
     private
 
-    def load_products
-      permitted = params.permit({ search: :name }, { order: {} }, :page, :length)
-      Admin::ModelLoadingService.new(Product.all, permitted).call
-    end
-
     def load_product
       @product = Product.find(params[:id])
     end
 
+    def load_products
+      permitted = params.permit({ search: :name }, { order: {} }, :page, :length)
+      Admin::ModelLoadingService.new(Product.all, permitted).call
+    end
 
     def run_service
       @saving_service = Admin::ProductSavingService.new(product_params.to_h, @product)
