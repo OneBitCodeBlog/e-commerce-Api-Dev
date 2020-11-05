@@ -1,7 +1,6 @@
 module Admin::V1
   class ProductsController < ApiController
     before_action :load_product, only: %i(update destroy)
-    before_action :initialize_saving_service, only: %i(create update)
     
     def index
       @products = load_products
@@ -37,11 +36,9 @@ module Admin::V1
       @product = Product.find(params[:id])
     end
 
-    def initialize_saving_service
-      @saving_service = Admin::ProductSavingService.new(product_params.to_h, @product)
-    end
 
     def run_service
+      @saving_service = Admin::ProductSavingService.new(product_params.to_h, @product)
       @saving_service.call
       @product = @saving_service.product
       render :show
@@ -51,13 +48,6 @@ module Admin::V1
       return {} unless params.has_key?(:product)
       permitted_params = params.require(:product).permit(:id, :name, :description, :image, :price, :productable)
       permitted_params.merge(productable_params)
-    end
-
-    def save_category!
-      @category.save!
-      render :show
-    rescue
-      render_error(fields: @category.errors.messages)
     end
 
     def productable_params
