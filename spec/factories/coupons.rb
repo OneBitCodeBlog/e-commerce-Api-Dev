@@ -4,7 +4,6 @@ FactoryBot.define do
     code { Faker::Commerce.unique.promotion_code(digits: 4) }
     status { :active }
     discount_value { 25 }
-    max_use { 1 }
     due_date { 3.days.from_now }
   end
 end
