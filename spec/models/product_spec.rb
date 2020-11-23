@@ -9,6 +9,8 @@ RSpec.describe Product, type: :model do
   it { is_expected.to validate_presence_of(:price) }
   it { is_expected.to validate_numericality_of(:price).is_greater_than(0) }
   it { is_expected.to validate_presence_of(:image) }
+  it { is_expected.to validate_presence_of(:status) }
+  it { is_expected.to define_enum_for(:status).with_values({ available: 1, unavailable: 2 }) }
 
   it { is_expected.to belong_to :productable }
   it { is_expected.to have_many(:product_categories).dependent(:destroy) }
