@@ -1,6 +1,6 @@
 module Admin::V1
   class ProductsController < ApiController
-    before_action :load_product, only: %i(update destroy)
+    before_action :load_product, only: %i(show update destroy)
     
     def index
       @products = load_products
@@ -11,6 +11,8 @@ module Admin::V1
     rescue Admin::ProductSavingService::NotSavedProductError
       render_error(fields: @saving_service.errors)
     end
+
+    def show; end
 
     def update
       run_service
