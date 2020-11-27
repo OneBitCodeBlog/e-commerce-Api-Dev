@@ -1,10 +1,11 @@
 module Admin::V1
   class CouponsController < ApiController
-    before_action :load_coupon, only: [:update, :destroy]
+    before_action :load_coupon, only: [:show, :update, :destroy]
     
     def index
       permitted = params.permit({ search: :name }, { order: {} }, :page, :length)
-      @coupons = Admin::ModelLoadingService.new(Coupon.all, permitted).call
+      @loading_service = Admin::ModelLoadingService.new(Coupon.all, permitted)
+      @loading_service.call
     end
 
     def create
@@ -12,6 +13,9 @@ module Admin::V1
       @coupon.attributes = coupon_params
       save_coupon!
     end
+
+
+    def show; end
 
     def update
       @coupon.attributes = coupon_params
