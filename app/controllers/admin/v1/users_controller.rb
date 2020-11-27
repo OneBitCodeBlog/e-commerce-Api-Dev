@@ -1,10 +1,12 @@
 module Admin::V1
   class UsersController < ApiController
-    before_action :load_user, only: [:update, :destroy]
+    before_action :load_user, only: [:show, :update, :destroy]
 
     def index
+      scope_without_current_user = User.where.not(id: @current_user.id)
       permitted = params.permit({ search: :name }, { order: {} }, :page, :length)
-      @users = Admin::ModelLoadingService.new(User.all, permitted).call
+      @loading_service = Admin::ModelLoadingService.new(scope_without_current_user, permitted)
+      @loading_service.call
     end
 
     def create
@@ -17,6 +19,8 @@ module Admin::V1
       @user.attributes = user_params
       save_user!
     end
+
+    def show; end
 
     def destroy
       @user.destroy!
