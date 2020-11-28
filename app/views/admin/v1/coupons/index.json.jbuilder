@@ -3,7 +3,5 @@ json.coupons do
 end
 
 json.meta do
-  json.partial! 'shared/pagination', page: @loading_service.page,
-                                     length: @loading_service.length,
-                                     total_pages: @loading_service.total_pages
+  json.partial! 'shared/pagination', pagination: @loading_service.pagination
 end
