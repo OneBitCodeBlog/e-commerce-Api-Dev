@@ -32,19 +32,25 @@ describe Admin::ModelLoadingService do
       it "sets right :page" do
         service = described_class.new(Category.all, params)
         service.call
-        expect(service.page).to eq 2
+        expect(service.pagination[:page]).to eq 2
       end
 
       it "sets right :length" do
         service = described_class.new(Category.all, params)
         service.call
-        expect(service.length).to eq 4
+        expect(service.pagination[:length]).to eq 4
+      end
+
+      it "sets right :total" do
+        service = described_class.new(Category.all, params)
+        service.call
+        expect(service.pagination[:total]).to eq 15
       end
 
       it "sets right :total_pages" do
         service = described_class.new(Category.all, params)
         service.call
-        expect(service.total_pages).to eq 4
+        expect(service.pagination[:total_pages]).to eq 4
       end
     end
 
@@ -65,19 +71,25 @@ describe Admin::ModelLoadingService do
       it "sets right :page" do
         service = described_class.new(Category.all, nil)
         service.call
-        expect(service.page).to eq 1
+        expect(service.pagination[:page]).to eq 1
       end
 
       it "sets right :length" do
         service = described_class.new(Category.all, nil)
         service.call
-        expect(service.length).to eq 10
+        expect(service.pagination[:length]).to eq 10
+      end
+
+      it "sets right :total" do
+        service = described_class.new(Category.all, nil)
+        service.call
+        expect(service.pagination[:total]).to eq 15
       end
 
       it "sets right :total_pages" do
         service = described_class.new(Category.all, nil)
         service.call
-        expect(service.total_pages).to eq 2
+        expect(service.pagination[:total_pages]).to eq 2
       end
     end
   end
