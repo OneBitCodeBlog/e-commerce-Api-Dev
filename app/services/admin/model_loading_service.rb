@@ -17,9 +17,11 @@ module Admin
       @pagination.merge!(total: filtered.count, total_pages: total_pages)
     end
 
+    private
+
     def fix_pagination_values
-      @pagination[:page] = @searchable_model.model::DEFAULT_PAGE if @pagination[:page].zero?
-      @pagination[:length] = @searchable_model.model::MAX_PER_PAGE if @pagination[:length].zero?
+      @pagination[:page] = @searchable_model.model::DEFAULT_PAGE if @pagination[:page] <= 0
+      @pagination[:length] = @searchable_model.model::MAX_PER_PAGE if @pagination[:length] <= 0
     end
   end
 end
