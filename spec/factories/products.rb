@@ -7,7 +7,7 @@ FactoryBot.define do
     status { :available }
     
     after :build do |product|
-      product.productable = create(:game)
+      product.productable ||= create(:game)
     end
   end
 end
