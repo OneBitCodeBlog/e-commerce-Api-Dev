@@ -29,9 +29,9 @@ if Rails.env.development? || Rails.env.test?
       30.times do
         game_name = Faker::Game.unique.title
         availability = [:available, :unavailable].sample
-        categories_pos = rand(3..25)
         categories_count = rand(0..3)
-        game_categories_ids = Category.all[categories_pos - categories_count..categories_pos].map(&:id)
+        game_categories_ids = []
+        categories_count.times { game_categories_ids << Category.all.sample.id }
         game = create(:game, system_requirement: system_requirements.sample)
         create(:product, name: game_name, status: availability, 
                          category_ids: game_categories_ids, productable: game)
