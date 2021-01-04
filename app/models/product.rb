@@ -1,5 +1,5 @@
 class Product < ApplicationRecord
-  include NameSearchable
+  include LikeSearchable
   include Paginatable
   
   has_one_attached :image
