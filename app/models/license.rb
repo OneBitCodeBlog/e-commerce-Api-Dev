@@ -1,4 +1,6 @@
 class License < ApplicationRecord
+  include Paginatable
+  
   validates :key, presence: true, uniqueness: { case_sensitive: false, scope: :platform }
   validates :platform, presence: true
   validates :status, presence: true
