@@ -2,10 +2,11 @@ require 'rails_helper'
 
 RSpec.describe "Admin V1 Licenses as :admin", type: :request do
   let(:user) { create(:user) }
+  let(:game) { create(:game) }
 
-  context "GET /licenses" do
-    let(:url) { "/admin/v1/licenses" }
-    let!(:licenses) { create_list(:license, 10) }
+  context "GET /games/:game_id/licenses" do
+    let(:url) { "/admin/v1/games/#{game.id}/licenses" }
+    let!(:licenses) { create_list(:license, 10, game: game) }
     
     context "without any params" do
       it "returns 10 Licenses" do
@@ -32,7 +33,7 @@ RSpec.describe "Admin V1 Licenses as :admin", type: :request do
     context "with search[key] param" do
       let!(:search_key_licenses) do
         licenses = [] 
-        15.times { |n| licenses << create(:license, key: "SRC#{n + 1}") }
+        15.times { |n| licenses << create(:license, key: "SRC#{n + 1}", game: game) }
         licenses 
       end
 
@@ -102,11 +103,21 @@ RSpec.describe "Admin V1 Licenses as :admin", type: :request do
         before { get url, headers: auth_header(user), params: order_params }
       end
     end
+
+    it "does not return licenses of another games" do
+      another_game = create(:game)
+      another_licenses = create_list(:license, 10, game: another_game)
+      get url, headers: auth_header(user), params: { length: 20 }
+      unexpected_licenses = another_licenses.map do |license| 
+        license.as_json(only: %i(id key platform status game_id))
+      end
+      expect(body_json['licenses']).to_not include *unexpected_licenses
+    end
   end
 
-  context "POST /licenses" do
+  context "POST /games/:game_id/licenses" do
     let!(:game) { create(:game) }
-    let(:url) { "/admin/v1/licenses" }
+    let(:url) { "/admin/v1/games/#{game.id}/licenses" }
     
     context "with valid params" do
       let(:license_params) { { license: attributes_for(:license, game_id: game.id) }.to_json }
