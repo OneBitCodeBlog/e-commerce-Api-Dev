@@ -36,6 +36,11 @@ if Rails.env.development? || Rails.env.test?
         create(:product, name: game_name, status: availability, 
                          category_ids: game_categories_ids, productable: game)
       end
+
+      50.times do
+        game = Game.all[0...5].sample
+        create(:license, game_id: game.id)
+      end
     end
   end
 end
