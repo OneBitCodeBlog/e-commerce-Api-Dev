@@ -3,12 +3,13 @@ module Admin::V1
     before_action :load_license, only: [:show, :update, :destroy]
 
     def index
-      @loading_service = Admin::ModelLoadingService.new(License.all, searchable_params)
+      game_licenses = License.where(game_id: params[:game_id])
+      @loading_service = Admin::ModelLoadingService.new(game_licenses, searchable_params)
       @loading_service.call
     end
 
     def create
-      @license = License.new
+      @license = License.new(game_id: params[:game_id])
       @license.attributes = license_params
       save_license!
     end
