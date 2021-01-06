@@ -40,6 +40,7 @@ describe Admin::ModelLoadingService do
       end
 
       it "does not return any record out of search" do
+        params.merge!(page: 1, length: 20)
         service = described_class.new(SystemRequirement.all, params)
         service.call
         expect(service.records).to_not include *unexpected_system_requirements
