@@ -1,5 +1,5 @@
 class Category < ApplicationRecord
-  include NameSearchable
+  include LikeSearchable
   include Paginatable
   
   validates :name, presence: true, uniqueness: { case_sensitive: false }
