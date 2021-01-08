@@ -446,6 +446,7 @@ def build_game_product_json(product)
   json = product.as_json(only: %i(id name description price status))
   json['image_url'] = rails_blob_url(product.image)
   json['productable'] = product.productable_type.underscore
+  json['productable_id'] = product.productable_id
   json['categories'] = product.categories.as_json
   json.merge! product.productable.as_json(only: %i(mode release_date developer))
   json['system_requirement'] = product.productable.system_requirement.as_json
