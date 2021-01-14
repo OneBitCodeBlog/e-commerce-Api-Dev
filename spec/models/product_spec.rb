@@ -21,6 +21,8 @@ RSpec.describe Product, type: :model do
   it_behaves_like "paginatable concern", :product
 
   it "creates as unfeatured by default" do
+    subject.featured = nil
+    subject.save(validate: false)
     expect(subject.featured).to be_falsey
   end
 end
