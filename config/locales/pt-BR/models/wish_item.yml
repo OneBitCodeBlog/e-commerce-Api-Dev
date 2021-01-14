@@ -1,0 +1,8 @@
+pt-BR:
+  activerecord:
+    errors:
+      models:
+        wish_item:
+          attributes:
+            product_id:
+              taken: "já está na lista do usuário"
