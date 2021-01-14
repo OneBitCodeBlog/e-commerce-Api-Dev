@@ -13,6 +13,7 @@ class Product < ApplicationRecord
   validates :price, presence: true, numericality: { greater_than: 0 }
   validates :image, presence: true
   validates :status, presence: true
+  validates :featured, presence: true, if: -> { featured.nil? }
 
   enum status: { available: 1, unavailable: 2 }
 end
