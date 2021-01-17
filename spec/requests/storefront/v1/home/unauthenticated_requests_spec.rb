@@ -95,7 +95,8 @@ RSpec.describe "Storefront V1 Home", type: :request do
   end
 
   def build_game_product_json(product)
-    json = product.as_json(only: %i(id name price description))
+    json = product.as_json(only: %i(id name description))
+    json['price'] = product.price.to_f
     json['image_url'] = rails_blob_url(product.image)
     json
   end
