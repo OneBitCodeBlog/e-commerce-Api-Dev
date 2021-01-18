@@ -443,7 +443,7 @@ RSpec.describe "Admin V1 Products as :admin", type: :request do
 end
 
 def build_game_product_json(product)
-  json = product.as_json(only: %i(id name description price status))
+  json = product.as_json(only: %i(id name description price status featured))
   json['image_url'] = rails_blob_url(product.image)
   json['productable'] = product.productable_type.underscore
   json['productable_id'] = product.productable_id
