@@ -19,6 +19,7 @@ Rails.application.routes.draw do
     namespace :v1 do
       get "home" => "home#index"
       resources :products, only: [:index, :show]
+      resources :categories, only: :index
     end
   end
 end
