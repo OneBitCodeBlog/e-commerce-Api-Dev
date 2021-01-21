@@ -361,11 +361,40 @@ RSpec.describe "Storefront V1 Home", type: :request do
     end
   end
 
+  context "GET /products/:id" do
+    let(:product) { create(:product) }
+    let(:url) { "/storefront/v1/products/#{product.id}" }
+
+    it "returns requested Product" do
+      get url, headers: unauthenticated_header
+      expected_product = build_detailed_game_product_json(product)
+      expect(body_json['product']).to eq expected_product
+    end
+
+    it "returns success status" do
+      get url, headers: unauthenticated_header
+      expect(response).to have_http_status(:ok)
+    end
+  end
+
   def build_game_product_json(product)
     json = product.as_json(only: %i(id name description))
     json['price'] = product.price.to_f
     json['image_url'] = rails_blob_url(product.image)
     json['categories'] = product.categories.map(&:name)
+    json
+  end
+
+  def build_detailed_game_product_json(product)
+    json = product.as_json(only: %i(id name description price status featured))
+    json['image_url'] = rails_blob_url(product.image)
+    json['productable'] = product.productable_type.underscore
+    json['productable_id'] = product.productable_id
+    json['categories'] = product.categories.as_json
+    json.merge! product.productable.as_json(only: %i(mode release_date developer))
+    json['system_requirement'] = product.productable.system_requirement.as_json
+    json['favorited_count'] = 0
+    json['sells_count'] = 0
     json
   end
 end
