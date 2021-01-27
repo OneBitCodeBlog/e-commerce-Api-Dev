@@ -1,45 +1,27 @@
 require 'rails_helper'
 
-RSpec.describe "Admin V1 Categories without authentication", type: :request do
+RSpec.describe "Storefront V1 Wish Items without authentication", type: :request do
   
-  context "GET /categories" do
-    let(:url) { "/admin/v1/categories" }
-    let!(:categories) { create_list(:category, 5) }
+  context "GET /wish_items" do
+    let(:url) { "/storefront/v1/wish_items" }
+    let!(:wish_items) { create_list(:wish_item, 5) }
 
     before(:each) { get url }
     
     include_examples "unauthenticated access"
   end
 
-  context "POST /categories" do
-    let(:url) { "/admin/v1/categories" }
+  context "POST /wish_items" do
+    let(:url) { "/storefront/v1/wish_items" }
     
     before(:each) { post url }
     
     include_examples "unauthenticated access"
   end
 
-  context "GET /categories/:id" do
-    let(:category) { create(:category) }
-    let(:url) { "/admin/v1/categories/#{category.id}" }
-
-    before(:each) { get url }
-
-    include_examples "unauthenticated access"
-  end
-
-  context "PATCH /categories/:id" do
-    let(:category) { create(:category) }
-    let(:url) { "/admin/v1/categories/#{category.id}" }
-
-    before(:each) { patch url }
-    
-    include_examples "unauthenticated access"
-  end
-
-  context "DELETE /categories/:id" do
-    let!(:category) { create(:category) }
-    let(:url) { "/admin/v1/categories/#{category.id}" }
+  context "DELETE /wish_items/:id" do
+    let!(:wish_item) { create(:wish_item) }
+    let(:url) { "/storefront/v1/wish_items/#{wish_item.id}" }
 
     before(:each) { delete url }
     
