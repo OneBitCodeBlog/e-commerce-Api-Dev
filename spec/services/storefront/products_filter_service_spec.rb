@@ -8,13 +8,13 @@ describe Storefront::ProductsFilterService do
       it "returns 10 records" do
         service = described_class.new
         service.call
-        expect(service.records.count).to eq 10
+        expect(service.records.size).to eq 10
       end
       
       it "returns right products" do
         service = described_class.new
         service.call
-        expect(service.records).to satisfy do |records|
+        expect(service.records.to_a).to satisfy do |records|
           records & general_products == records
         end
       end
@@ -61,7 +61,7 @@ describe Storefront::ProductsFilterService do
       it "returns 10 records" do
         service = described_class.new(params)
         service.call
-        expect(service.records.count).to eq 10
+        expect(service.records.size).to eq 10
       end
       
       it "returns right products" do
@@ -113,7 +113,7 @@ describe Storefront::ProductsFilterService do
       it "returns 10 records" do
         service = described_class.new(params)
         service.call
-        expect(service.records.count).to eq 10
+        expect(service.records.size).to eq 10
       end
       
       it "returns right products" do
@@ -175,7 +175,7 @@ describe Storefront::ProductsFilterService do
         it "returns 10 records" do
           service = described_class.new(params)
           service.call
-          expect(service.records.count).to eq 10
+          expect(service.records.size).to eq 10
         end
         
         it "returns right products" do
@@ -224,7 +224,7 @@ describe Storefront::ProductsFilterService do
         it "returns 10 records" do
           service = described_class.new(params)
           service.call
-          expect(service.records.count).to eq 5
+          expect(service.records.size).to eq 5
         end
         
         it "returns right products" do
@@ -273,7 +273,7 @@ describe Storefront::ProductsFilterService do
         it "returns 10 records" do
           service = described_class.new(params)
           service.call
-          expect(service.records.count).to eq 10
+          expect(service.records.size).to eq 10
         end
         
         it "returns right products" do
@@ -342,7 +342,7 @@ describe Storefront::ProductsFilterService do
         it "returns 5 records" do
           service = described_class.new(params)
           service.call
-          expect(service.records.count).to eq 5
+          expect(service.records.size).to eq 5
         end
         
         it "returns right products" do
@@ -391,7 +391,7 @@ describe Storefront::ProductsFilterService do
         it "returns 10 records" do
           service = described_class.new(params)
           service.call
-          expect(service.records.count).to eq 10
+          expect(service.records.size).to eq 10
         end
         
         it "returns right products" do
@@ -442,7 +442,7 @@ describe Storefront::ProductsFilterService do
         it "returns 10 records" do
           service = described_class.new(params)
           service.call
-          expect(service.records.count).to eq 10
+          expect(service.records.size).to eq 10
         end
         
         it "returns right products" do
@@ -495,7 +495,7 @@ describe Storefront::ProductsFilterService do
       it "returns records sized by :length" do
         service = described_class.new(params)
         service.call
-        expect(service.records.count).to eq length
+        expect(service.records.size).to eq length
       end
       
       it "returns products limited by pagination" do
@@ -532,45 +532,90 @@ describe Storefront::ProductsFilterService do
     end
 
     context "with order params" do
-      let(:params) { { order: { price: 'desc' } } }
+      context "by price" do
+        let(:params) { { order: { price: 'desc' } } }
 
-      it "returns 10 records" do
-        service = described_class.new(params)
-        service.call
-        expect(service.records.count).to eq 10
-      end
+        it "returns 10 records" do
+          service = described_class.new(params)
+          service.call
+          expect(service.records.size).to eq 10
+        end
 
-      it "returns ordered products limited by default pagination" do
-        service = described_class.new(params)
-        service.call
-        general_products.sort! { |a, b| b[:price] <=> a[:price] }
-        expect(service.records.to_a).to satisfy do |records|
-          records & general_products == records
+        it "returns ordered products limited by default pagination" do
+          service = described_class.new(params)
+          service.call
+          general_products.sort! { |a, b| b[:price] <=> a[:price] }
+          expect(service.records.to_a).to satisfy do |records|
+            records & general_products == records
+          end
+        end
+  
+        it "sets right :page" do
+          service = described_class.new(params)
+          service.call
+          expect(service.pagination[:page]).to eq 1
+        end
+
+        it "sets right :length" do
+          service = described_class.new(params)
+          service.call
+          expect(service.pagination[:length]).to eq 10
+        end
+
+        it "sets right :total" do
+          service = described_class.new(params)
+          service.call
+          expect(service.pagination[:total]).to eq 15
+        end
+
+        it "sets right :total_pages" do
+          service = described_class.new(params)
+          service.call
+          expect(service.pagination[:total_pages]).to eq 2
         end
       end
- 
-      it "sets right :page" do
-        service = described_class.new(params)
-        service.call
-        expect(service.pagination[:page]).to eq 1
-      end
 
-      it "sets right :length" do
-        service = described_class.new(params)
-        service.call
-        expect(service.pagination[:length]).to eq 10
-      end
+      context "by release date" do
+        let(:params) { { order: { release_date: 'desc' } } }
 
-      it "sets right :total" do
-        service = described_class.new(params)
-        service.call
-        expect(service.pagination[:total]).to eq 15
-      end
+        it "returns 10 records" do
+          service = described_class.new(params)
+          service.call
+          expect(service.records.size).to eq 10
+        end
 
-      it "sets right :total_pages" do
-        service = described_class.new(params)
-        service.call
-        expect(service.pagination[:total_pages]).to eq 2
+        it "returns ordered products limited by default pagination" do
+          service = described_class.new(params)
+          service.call
+          general_products.sort! { |a, b| b[:release_date] <=> a[:release_date] }
+          expect(service.records.to_a).to satisfy do |records|
+            records & general_products == records
+          end
+        end
+  
+        it "sets right :page" do
+          service = described_class.new(params)
+          service.call
+          expect(service.pagination[:page]).to eq 1
+        end
+
+        it "sets right :length" do
+          service = described_class.new(params)
+          service.call
+          expect(service.pagination[:length]).to eq 10
+        end
+
+        it "sets right :total" do
+          service = described_class.new(params)
+          service.call
+          expect(service.pagination[:total]).to eq 15
+        end
+
+        it "sets right :total_pages" do
+          service = described_class.new(params)
+          service.call
+          expect(service.pagination[:total_pages]).to eq 2
+        end
       end
     end
   end

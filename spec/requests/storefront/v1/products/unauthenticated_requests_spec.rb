@@ -339,24 +339,48 @@ RSpec.describe "Storefront V1 Home", type: :request do
     end
 
     context "with order params" do
-      let(:order_params) { { order: { name: 'desc' } } }
+      context "by price" do
+        let(:order_params) { { order: { price: 'desc' } } }
 
-      it "returns ordered products limited by default pagination" do
-        get url, headers: unauthenticated_header, params: order_params
-        general_products.sort! { |a, b| b[:name] <=> a[:name] }
-        expected_return = general_products[0..9].map do |product|
-          build_game_product_json(product)
+        it "returns ordered products limited by default pagination" do
+          get url, headers: unauthenticated_header, params: order_params
+          general_products.sort! { |a, b| b[:price] <=> a[:price] }
+          expected_return = general_products[0..9].map do |product|
+            build_game_product_json(product)
+          end
+          expect(body_json['products']).to contain_exactly *expected_return
         end
-        expect(body_json['products']).to contain_exactly *expected_return
-      end
- 
-      it "returns success status" do
-        get url, headers: unauthenticated_header, params: order_params
-        expect(response).to have_http_status(:ok)
+  
+        it "returns success status" do
+          get url, headers: unauthenticated_header, params: order_params
+          expect(response).to have_http_status(:ok)
+        end
+
+        it_behaves_like 'pagination meta attributes', { page: 1, length: 10, total: 15, total_pages: 2 } do
+          before { get url, headers: unauthenticated_header, params: order_params }
+        end
       end
 
-      it_behaves_like 'pagination meta attributes', { page: 1, length: 10, total: 15, total_pages: 2 } do
-        before { get url, headers: unauthenticated_header, params: order_params }
+      context "by release date" do
+        let(:order_params) { { order: { release_date: 'desc' } } }
+
+        it "returns ordered products limited by default pagination" do
+          get url, headers: unauthenticated_header, params: order_params
+          general_products.sort! { |a, b| b[:release_date] <=> a[:release_date] }
+          expected_return = general_products[0..9].map do |product|
+            build_game_product_json(product)
+          end
+          expect(body_json['products']).to contain_exactly *expected_return
+        end
+  
+        it "returns success status" do
+          get url, headers: unauthenticated_header, params: order_params
+          expect(response).to have_http_status(:ok)
+        end
+
+        it_behaves_like 'pagination meta attributes', { page: 1, length: 10, total: 15, total_pages: 2 } do
+          before { get url, headers: unauthenticated_header, params: order_params }
+        end
       end
     end
   end
