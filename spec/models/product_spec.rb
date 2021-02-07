@@ -16,6 +16,7 @@ RSpec.describe Product, type: :model do
   it { is_expected.to belong_to :productable }
   it { is_expected.to have_many(:product_categories).dependent(:destroy) }
   it { is_expected.to have_many(:categories).through(:product_categories) }
+  it { is_expected.to have_many(:wish_items) }
 
   it_has_behavior_of "like searchable concern", :product, :name
   it_behaves_like "paginatable concern", :product
