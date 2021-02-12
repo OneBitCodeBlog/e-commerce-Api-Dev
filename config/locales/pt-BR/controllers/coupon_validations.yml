@@ -1,0 +1,4 @@
+pt-BR:
+  storefront/v1/coupon_validations:
+    create:
+      failure: Cupom não pode ser utilizado
