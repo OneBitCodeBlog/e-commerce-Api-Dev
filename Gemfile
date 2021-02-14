@@ -16,6 +16,9 @@ gem 'devise_token_auth', '~> 1.1.4'
 # CORS
 gem 'rack-cors', '~> 1.1.1'
 
+# Delayed Jobs
+gem "sidekiq", '~> 6.1.3'
+
 # Rendering
 gem 'jbuilder', '~> 2.10.1'
 
