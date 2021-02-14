@@ -1,0 +1,6 @@
+pt-BR:
+  storefront/checkout_processor_service:
+    error:
+      items: 
+        presence: deve estar presente
+        empty: não pode estar vazio
