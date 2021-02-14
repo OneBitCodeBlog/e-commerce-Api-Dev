@@ -13,6 +13,7 @@ module Storefront
     def call
       check_presence_of_items_param
       check_emptyness_of_items_param
+      validate_coupon
       do_checkout
       raise InvalidParamsError if @errors.present?
     end
@@ -29,6 +30,13 @@ module Storefront
       if @params[:items].blank?
         @errors[:items] = I18n.t('storefront/checkout_processor_service.errors.items.empty')
       end
+    end
+
+    def validate_coupon
+      return unless @params.has_key?(:coupon_id)
+      Coupon.find(@params[:coupon_id]).validate_use!
+    rescue Coupon::InvalidUse, ActiveRecord::RecordNotFound
+      @errors[:coupon] = I18n.t('storefront/checkout_processor_service.errors.coupon.invalid') 
     end
 
     def do_checkout

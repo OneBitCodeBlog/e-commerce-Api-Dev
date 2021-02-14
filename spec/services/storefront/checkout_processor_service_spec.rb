@@ -53,6 +53,13 @@ describe Storefront::CheckoutProcessorService do
         service = error_proof_call(params)
         expect(service.errors).to have_key(:payed_price)
       end
+
+      it "set error when Coupon is invalid" do
+        coupon = Coupon.create(status: :inactive)
+        params.merge!({ items: [{ payed_price: 0}], coupon_id: coupon.id })
+        service = error_proof_call(params)
+        expect(service.errors).to have_key(:coupon)
+      end
     end
 
     context "with valid params" do

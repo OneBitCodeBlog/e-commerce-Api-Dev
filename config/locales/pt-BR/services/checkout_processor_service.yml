@@ -1,6 +1,8 @@
 pt-BR:
   storefront/checkout_processor_service:
-    error:
+    errors:
       items: 
         presence: deve estar presente
         empty: não pode estar vazio
+      coupon: 
+        invalid: não é valido
