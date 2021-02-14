@@ -5,7 +5,7 @@ class Order < ApplicationRecord
   belongs_to :coupon, optional: true
   has_many :line_items
 
-  validates :status, presence: true
+  validates :status, presence: true, on: :update
   validates :subtotal, presence: true, numericality: { greater_than: 0 }
   validates :total_amount, presence: true, numericality: { greater_than: 0 }
   validates :payment_type, presence: true
@@ -16,7 +16,15 @@ class Order < ApplicationRecord
 
   enum payment_type: { credit_card: 1, billet: 2 }
 
+  before_validation :set_default_status, on: :create
+
   def due_date
     self.created_at + DAYS_TO_DUE.days
+  end
+
+  private
+
+  def set_default_status
+    self.status = :processing_order
   end
 end

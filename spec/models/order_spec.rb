@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe Order, type: :model do
-  it { is_expected.to validate_presence_of(:status) }
+  it { is_expected.to validate_presence_of(:status).on(:update) }
   it do 
     is_expected.to define_enum_for(:status).with_values({ 
       processing_order: 1, order_accepted: 2, processing_payment: 3, 
@@ -25,5 +25,10 @@ RSpec.describe Order, type: :model do
     subject = create(:order)
     distance_days = (subject.due_date - subject.created_at) / 86400
     expect(distance_days).to eq 7
+  end
+
+  it "receives :pending_payment status as default on creation" do
+    subject = create(:order, status: nil)
+    expect(subject.status).to eq "processing_order"
   end
 end
