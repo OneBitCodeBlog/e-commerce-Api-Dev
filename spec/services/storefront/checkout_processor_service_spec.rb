@@ -7,51 +7,27 @@ describe Storefront::CheckoutProcessorService do
     context "with invalid params" do
       let(:params) { { installments: 1, user_id: user.id } }
 
-      it "set error when it is not present" do
+      it "set error when it order params not present" do
         service = error_proof_call(params)
         expect(service.errors.keys).to match_array(%i[subtotal total_amount payment_type items])
       end
   
-      it "set error when :subtotal is 0" do
-        params.merge!({ subtotal: 0 })
-        service = error_proof_call(params)
-        expect(service.errors).to have_key(:subtotal)
-      end
-
-      it "set error when :total_amout is 0" do
-        params.merge!({ total_amount: 0 })
-        service = error_proof_call(params)
-        expect(service.errors).to have_key(:total_amount)
-      end
-
-      it "set error when :payment_type does not exist" do
-        params.merge!({ payment_type: :debit })
-        service = error_proof_call(params)
-        expect(service.errors).to have_key(:base)
-      end
-
       it "set error when :items key is empty" do
-        params.merge!({ items: [], subtotal: 100.21, total_amount: 89.31, payment_type: :credit_card })
+        params.merge!({ items: [], subtotal: 100.21, total_amount: 89.31, payment_type: :billet })
         service = error_proof_call(params)
         expect(service.errors).to have_key(:items)
       end
 
       it "set error when some :items attribute is not present" do
-        params.merge!({ items: [{}], subtotal: 100.21, total_amount: 89.31, payment_type: :credit_card })
+        params.merge!({ items: [{}], subtotal: 100.21, total_amount: 89.31, payment_type: :billet })
         service = error_proof_call(params)
         expect(service.errors.keys).to match_array(%i[quantity payed_price product])
       end
 
-      it "set error when :items :quantity is 0" do
-        params.merge!({ items: [{ quantity: 0}], subtotal: 100.21, total_amount: 89.31, payment_type: :credit_card })
+      it "set error when :items params are invalid" do
+        params.merge!({ items: [{ quantity: 0, payed_price: 0}], subtotal: 100.21, total_amount: 89.31, payment_type: :billet })
         service = error_proof_call(params)
         expect(service.errors).to have_key(:quantity)
-      end
-
-      it "set error when :items :payed_price is 0" do
-        params.merge!({ items: [{ payed_price: 0}], subtotal: 100.21, total_amount: 89.31, payment_type: :credit_card })
-        service = error_proof_call(params)
-        expect(service.errors).to have_key(:payed_price)
       end
 
       it "set error when Coupon is invalid" do
@@ -59,6 +35,20 @@ describe Storefront::CheckoutProcessorService do
         params.merge!({ items: [{ payed_price: 0}], coupon_id: coupon.id })
         service = error_proof_call(params)
         expect(service.errors).to have_key(:coupon)
+      end
+
+      context "when payment_type is :credit_card" do
+        let(:params) { { installments: 1, user_id: user.id, payment_type: :credit_card } }
+
+        it "set error when :address is invalid" do
+          service = error_proof_call(params)
+          expect(service.errors).to have_key(:address)
+        end
+
+        it "set error when address :card_hash is not present" do
+          service = error_proof_call(params)
+          expect(service.errors).to have_key(:card_hash)
+        end
       end
     end
 
@@ -73,7 +63,9 @@ describe Storefront::CheckoutProcessorService do
           items: [
             { quantity: 2, payed_price: 150.31, product_id: products.first.id },
             { quantity: 3, payed_price: 140.11, product_id: products.second.id }
-          ]
+          ],
+          card_hash: "12345",
+          address: attributes_for(:address)
         }
       end
 

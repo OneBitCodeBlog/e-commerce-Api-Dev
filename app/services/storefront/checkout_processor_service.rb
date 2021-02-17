@@ -43,16 +43,25 @@ module Storefront
       create_order
     rescue ActiveRecord::RecordInvalid => e
       @errors.merge! e.record.errors.messages
+      @errors.merge!(address: e.record.address.errors.messages) if e.record.errors.has_key?(:address)
     end
 
     def create_order
       Order.transaction do
-        order_params = @params.slice(:subtotal, :total_amount, :payment_type, :installments, :coupon_id, :user_id)
-        @order = Order.create!(order_params)
+        @order = instantiate_order
+        @order.save!
         @params[:items].each { |line_item_params| @order.line_items.create!(line_item_params) }
       end
     rescue ArgumentError => e
       @errors[:base] = e.message
+    end
+
+    def instantiate_order
+      order_params = @params.slice(:subtotal, :total_amount, :payment_type, :installments, :card_hash, 
+        :coupon_id, :user_id)
+      order = Order.new(order_params)
+      order.address = Address.new(@params[:address])
+      order
     end
   end
 end
