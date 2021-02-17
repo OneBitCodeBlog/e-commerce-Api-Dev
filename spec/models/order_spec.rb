@@ -31,4 +31,24 @@ RSpec.describe Order, type: :model do
     subject = create(:order, status: nil)
     expect(subject.status).to eq "processing_order"
   end
+
+  context "when :payment_type is :credit_card" do
+    it "validates :card_hash presence" do
+      subject = build(:order, payment_type: :credit_card, card_hash: nil)
+      subject.validate
+      expect(subject.errors).to have_key(:card_hash)
+    end
+
+    it "validates :address presence" do
+      subject = build(:order, payment_type: :credit_card, address: nil)
+      subject.validate
+      expect(subject.errors).to have_key(:address)
+    end
+
+    it "validates_associated :address" do
+      subject = build(:order, payment_type: :credit_card, address: nil)
+      subject.validate
+      expect(subject.errors).to have_key(:address)
+    end
+  end
 end
