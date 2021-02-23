@@ -9,6 +9,8 @@ class User < ActiveRecord::Base
   
   include DeviseTokenAuth::Concerns::User
 
+  has_many :wish_items
+
   validates :name, presence: true
   validates :profile, presence: true
   
