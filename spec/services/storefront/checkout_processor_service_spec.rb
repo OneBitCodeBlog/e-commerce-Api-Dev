@@ -9,23 +9,26 @@ describe Storefront::CheckoutProcessorService do
 
       it "set error when it order params not present" do
         service = error_proof_call(params)
-        expect(service.errors.keys).to match_array(%i[subtotal total_amount payment_type items])
+        expect(service.errors.keys).to match_array(%i[subtotal total_amount payment_type document items])
       end
   
       it "set error when :items key is empty" do
-        params.merge!({ items: [], subtotal: 100.21, total_amount: 89.31, payment_type: :billet })
+        params.merge!({ items: [], document: '03.000.050/0001-67', subtotal: 100.21, total_amount: 89.31, 
+                        payment_type: :billet })
         service = error_proof_call(params)
         expect(service.errors).to have_key(:items)
       end
 
       it "set error when some :items attribute is not present" do
-        params.merge!({ items: [{}], subtotal: 100.21, total_amount: 89.31, payment_type: :billet })
+        params.merge!({ items: [{}], document: '03.000.050/0001-67', subtotal: 100.21, total_amount: 89.31, 
+                        payment_type: :billet })
         service = error_proof_call(params)
         expect(service.errors.keys).to match_array(%i[quantity payed_price product])
       end
 
       it "set error when :items params are invalid" do
-        params.merge!({ items: [{ quantity: 0, payed_price: 0}], subtotal: 100.21, total_amount: 89.31, payment_type: :billet })
+        params.merge!({ items: [{ quantity: 0, payed_price: 0}], subtotal: 100.21, total_amount: 89.31, 
+                        document: '03.000.050/0001-67', payment_type: :billet })
         service = error_proof_call(params)
         expect(service.errors).to have_key(:quantity)
       end
@@ -59,7 +62,7 @@ describe Storefront::CheckoutProcessorService do
       let(:params) do
         { 
           subtotal: 720.95, total_amount: 540.71, payment_type: :credit_card, 
-          coupon_id: coupon.id, user_id: user.id, installments: 2,
+          coupon_id: coupon.id, user_id: user.id, installments: 2, document: '03.000.050/0001-67', 
           items: [
             { quantity: 2, payed_price: 150.31, product_id: products.first.id },
             { quantity: 3, payed_price: 140.11, product_id: products.second.id }

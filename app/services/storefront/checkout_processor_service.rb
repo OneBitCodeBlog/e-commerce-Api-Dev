@@ -57,8 +57,8 @@ module Storefront
     end
 
     def instantiate_order
-      order_params = @params.slice(:subtotal, :total_amount, :payment_type, :installments, :card_hash, 
-        :coupon_id, :user_id)
+      order_params = @params.slice(:document, :subtotal, :total_amount, :payment_type, :installments, :card_hash, 
+                                   :coupon_id, :user_id)
       order = Order.new(order_params)
       order.address = Address.new(@params[:address])
       order
