@@ -16,10 +16,23 @@ RSpec.describe Order, type: :model do
   it { is_expected.to define_enum_for(:payment_type).with_values({ credit_card: 1, billet: 2 }) }
   it { is_expected.to validate_presence_of(:installments) }
   it { is_expected.to validate_numericality_of(:installments).only_integer.is_greater_than(0) }
+  it { is_expected.to validate_presence_of(:document) }
 
   it { is_expected.to have_many :line_items }
   it { is_expected.to belong_to :user }
   it { is_expected.to belong_to(:coupon).optional }
+
+  it "validates if :document is as CPF" do
+    subject.document = "111.561.236-63"
+    subject.validate
+    expect(subject.errors).to have_key(:document)
+  end
+
+  it "validates if :document is as CNPJ" do
+    subject.document = "34.123.754-0001/01"
+    subject.validate
+    expect(subject.errors).to have_key(:document)
+  end
 
   it "#due_date must be 7 days ahead :created_at" do
     subject = create(:order)

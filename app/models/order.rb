@@ -3,6 +3,7 @@ class Order < ApplicationRecord
 
   attribute :address
   attribute :card_hash
+  attribute :document
 
   belongs_to :user
   belongs_to :coupon, optional: true
@@ -13,6 +14,7 @@ class Order < ApplicationRecord
   validates :total_amount, presence: true, numericality: { greater_than: 0 }
   validates :payment_type, presence: true
   validates :installments, presence: true, numericality: { only_integer: true, greater_than: 0 }
+  validates :document, presence: true, cpf_cnpj: true
 
   with_options if: ->{ credit_card? } do
     validates :card_hash, presence: true
