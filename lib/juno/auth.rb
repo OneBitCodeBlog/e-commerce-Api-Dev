@@ -6,7 +6,7 @@ module Juno
     SECONDS_TO_WAIT_PROCESSING = 0.5
     LIMIT_RATE_TO_RENEW = 90
 
-    base_uri "#{JUNO_BASE_URL}"
+    base_uri "#{JUNO_AUTH_URL}"
 
     attr_reader :access_token, :expires_in, :request_time
     private_class_method :new

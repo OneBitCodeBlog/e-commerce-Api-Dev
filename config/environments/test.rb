@@ -49,5 +49,5 @@ Rails.application.configure do
   # Raises error for missing translations.
   # config.action_view.raise_on_missing_translations = true
 
-  JUNO_BASE_URL = "https://sandbox.boletobancario.com"
+  JUNO_AUTH_URL = "https://sandbox.boletobancario.com"
 end
