@@ -50,4 +50,5 @@ Rails.application.configure do
   # config.action_view.raise_on_missing_translations = true
 
   JUNO_AUTH_URL = "https://sandbox.boletobancario.com"
+  JUNO_RESOURCE_URL = "https://sandbox.boletobancario.com/api-integration"
 end
