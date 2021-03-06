@@ -1,6 +1,6 @@
 require_relative "./auth.rb"
 
-module Juno
+module JunoApi
   class Charge
     class RequestError < StandardError; end
 

@@ -1,22 +1,29 @@
 require "rails_helper"
-require_relative "../../../lib/juno/charge"
+require_relative "../../../lib/juno/payment"
 
-describe Juno::Charge do
+describe JunoApi::CreditCardPayment do
   let!(:order) { create(:order) }
 
   describe "#create" do
+    let!(:order) { create(:order) }
+    let(:charges) {
+      order.map do |order| 
+        {  }
+      end
+    }
+
     before(:each) do
       singleton = double(access_token: SecureRandom.hex)
-      allow(Juno::Auth).to receive(:singleton).and_return(singleton)
+      allow(JunoApi::Auth).to receive(:singleton).and_return(singleton)
     end
 
     context "with invalid params" do
       it "should raise an error" do
         error_response = double(code: 400)
-        allow(Juno::Charge).to receive(:post).and_return(error_response)
+        allow(JunoApi::CreditCardPayment).to receive(:post).and_return(error_response)
         expect do
           described_class.new.create!(order)
-        end.to raise_error(Juno::Charge::RequestError)
+        end.to raise_error(JunoApi::CreditCardPayment::RequestError)
       end
     end
 
@@ -32,7 +39,7 @@ describe Juno::Charge do
 
       before(:each) do
         api_response = double(code: 200, body: return_from_api, parsed_response: JSON.parse(return_from_api))
-        allow(Juno::Charge).to receive(:post).and_return(api_response)
+        allow(JunoApi::Charge).to receive(:post).and_return(api_response)
       end
 
       it "returns same quantity of charges as installments" do

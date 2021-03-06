@@ -1,8 +1,8 @@
 require "rails_helper"
-require_relative "../../../lib/juno/auth"
+require_relative "../../../lib/juno_api/auth"
 
-describe Juno::Auth do
-  let(:auth_class) { Juno::Auth.clone }
+describe JunoApi::Auth do
+  let(:auth_class) { JunoApi::Auth.clone }
 
   context "when call #singleton" do
     let(:response) do

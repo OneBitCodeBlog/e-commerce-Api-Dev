@@ -1,4 +1,4 @@
-module Juno
+module JunoApi
   class Auth
     include HTTParty
 
