@@ -1,5 +1,6 @@
 class Juno::Charge < ApplicationRecord
   belongs_to :order
+  has_many :credit_card_payments, class_name: "Juno::CreditCardPayment"
   
   validates :key, presence: true
   validates :code, presence: true
