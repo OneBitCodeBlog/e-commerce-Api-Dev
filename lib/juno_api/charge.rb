@@ -1,9 +1,8 @@
-require_relative "./auth.rb"
+require_relative "./auth"
+require_relative "./request_error"
 
 module JunoApi
   class Charge
-    class RequestError < StandardError; end
-
     include HTTParty
 
     PAYMENT_TYPE = { 'billet' => "BOLETO", 'credit_card' =>"CREDIT_CARD" }
@@ -22,7 +21,7 @@ module JunoApi
       auth_header = { 'Authorization' => "Bearer #{auth.access_token}" }
       body = prepare_create_body(order)
       response = self.class.post("/", headers: auth_header, body: body.to_json)
-      raise RequestError.new("Invalid data sent to Juno") if response.code != 200
+      raise_error(response) if response.code != 200
       organize_response(response)
     end
 
@@ -35,6 +34,13 @@ module JunoApi
         charge: build_charge(order),
         billing: { name: order.user.name, document: order.document, email: order.user.email }
       }
+    end
+
+    def raise_error(response)
+      details = response.parsed_response['details'].map { |detail| detail.transform_keys(&:underscore) }
+      raise RequestError.new("Invalid request sent to Juno", details)
+    rescue => e
+      raise RequestError.new("Invalid request sent to Juno")
     end
 
     def organize_response(response)

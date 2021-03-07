@@ -12,11 +12,12 @@ describe JunoApi::Charge do
 
     context "with invalid params" do
       it "should raise an error" do
-        error_response = double(code: 400)
+        error = { details: [{ message: "Some error", errorCode: "10000" }] }.to_json
+        error_response = double(code: 400, body: error, parsed_response: JSON.parse(error))
         allow(JunoApi::Charge).to receive(:post).and_return(error_response)
         expect do
           described_class.new.create!(order)
-        end.to raise_error(JunoApi::Charge::RequestError)
+        end.to raise_error(JunoApi::RequestError)
       end
     end
 
@@ -48,7 +49,7 @@ describe JunoApi::Charge do
 
 
       it "return right amount on each installment" do
-        installment_for_payment = (order.total_amount / order.installments.to_f).floor(2)
+        installment_for_payment = (order.total_amount / order.installments.to_f).floor(2).to_f
         charges = described_class.new.create!(order)
         charges.each do |charge| 
           expect(charge[:amount].to_f).to eq installment_for_payment
