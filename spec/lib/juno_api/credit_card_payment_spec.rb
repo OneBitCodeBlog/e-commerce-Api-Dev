@@ -47,10 +47,10 @@ describe JunoApi::CreditCardPayment do
         expect(payments.count).to eq charges.count
       end
 
-      it "return spected payments hash" do
+      it "return expected payments hash" do
         expected_payments = charges.map.with_index do |charge, index|
           release_date = (Time.zone.now + index.months).strftime("%Y-%m-%d")
-          { id: "pay_000#{index}", charge: charge.key, release_date: release_date, status: "CONFIRMED", reason: nil }
+          { key: "pay_000#{index}", charge: charge.key, release_date: release_date, status: "CONFIRMED", reason: nil }
         end
         payments = described_class.new.create!(order)
         expect(payments).to eq expected_payments

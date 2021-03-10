@@ -35,7 +35,7 @@ module JunoApi
       }
     end
 
-    def raise_error(response)
+    def raise_error(response) 
       details = response.parsed_response['details'].map { |detail| detail.transform_keys(&:underscore) }
       raise RequestError.new("Invalid request sent to Juno", details)
     rescue NoMethodError => e
@@ -45,7 +45,7 @@ module JunoApi
     def organize_response(response)
       response.parsed_response['payments'].map do |payment|
         { 
-          id: payment['id'], charge: payment['chargeId'], release_date: payment['releaseDate'], 
+          key: payment['id'], charge: payment['chargeId'], release_date: payment['releaseDate'], 
           status: payment['status'], reason: payment['failReason'] 
         }
       end
