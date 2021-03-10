@@ -25,8 +25,11 @@ describe JunoApi::Charge do
       let(:return_from_api) do
         installment_to_pay = (order.total_amount / order.installments).floor(2)
         charges = 0.upto(order.installments - 1).map do |num|
-          { id: "000#{num}", code: num, dueDate: (order.due_date + num.months).strftime("%Y-%m-%d"),
-            amount: installment_to_pay }
+          { 
+            id: "000#{num}", code: num, dueDate: (order.due_date + num.months).strftime("%Y-%m-%d"),
+            reference: "", amount: installment_to_pay, checkoutUrl: Faker::Internet.url(host: 'checkout.juno.com'),
+            status: "ACTIVE", _links: { self: { href: Faker::Internet.url(host: 'checkout.juno.com') } } 
+          }
         end
         { _embedded: { charges: charges } }.to_json
       end
