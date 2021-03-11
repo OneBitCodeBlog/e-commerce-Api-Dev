@@ -65,4 +65,12 @@ RSpec.describe Order, type: :model do
       expect(subject.errors).to have_key(:address)
     end
   end
+
+  it "schedules a job for Juno charge creation after creation" do
+    order = build(:order)
+    order_params = { card_hash: order.card_hash, document: order.document, address: order.address.attributes }
+    expect do
+      order.save!
+    end.to have_enqueued_job(Juno::ChargeCreationJob).with(order, order_params)
+  end
 end
