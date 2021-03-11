@@ -1,0 +1,9 @@
+<h1><%= t('.title', order_number: params[:order].id) %></h1>
+
+<p><%= t('.body') %></p>
+
+<% if params[:order].billet? %>
+  <p><%= t('.billet_payment.html', billet_link: params[:order].juno_charges.first.billet_url) %></p>
+<% elsif params[:order].credit_card? %>
+  <p><%= t('.credit_card_payment') %></p>
+<% end %>

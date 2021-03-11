@@ -1,0 +1,27 @@
+pt-BR:
+  checkout_mailer:
+    success:
+      subject: "Pedido #%{order_number} concluído com sucesso!"
+      title: "Seu pedido #%{order_number} foi um sucesso!"
+      body: |
+        Obrigado por ter comprando com a gente!
+      billet_payment:
+        html: O seu boleto está <a href="%{billet_link}">neste link</a> =D
+      credit_card_payment: |
+        O pagamento já foi um sucesso! Em breve vamos liberar o seu pedido =)
+    
+    generic_error:
+      subject: "Ocorreu um erro com o seu pedido #%{order_number}"
+      title: "Encontramos um erro ao processar o seu pedido #%{order_number}"
+      body:
+        html: |
+          Infelizmente não conseguimos processar o seu pedido.<br/>
+          Tente novamente daqui alguns minutos. Se o erro persistir o nosso suporte estará à sua disposição =)
+
+    payment_error:
+      subject: "Ocorreu um erro com o seu pedido #%{order_number}"
+      title: "Encontramos um erro no pagamento do seu pedido #%{order_number}"
+      body:
+        html: |
+          Infelizmente não conseguimos processar o seu pagamento.<br />
+          Ao tentarmos processar o seu pagamento, tivemos o seguinte status sobre o seu cartão: %{message}
