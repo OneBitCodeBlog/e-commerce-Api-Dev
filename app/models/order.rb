@@ -23,8 +23,8 @@ class Order < ApplicationRecord
     validates_associated :address
   end
 
-  enum status: { processing_order: 1, order_accepted: 2, processing_payment: 3, 
-                 payment_accepted: 4, payment_denied: 5, delivered: 6  }
+  enum status: { processing_order: 1, processing_error: 2, waiting_payment: 3,
+                 payment_accepted: 4, payment_denied: 5, delivered: 6 }
 
   enum payment_type: { credit_card: 1, billet: 2 }
   before_validation :set_default_status, on: :create
