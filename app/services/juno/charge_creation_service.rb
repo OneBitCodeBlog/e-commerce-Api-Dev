@@ -12,6 +12,7 @@ module Juno
     def call
       create_charges
       create_credit_card_payment if @order.credit_card?
+      CheckoutMailer.with(order: @order).success.deliver_later
     rescue JunoApi::RequestError => e
       set_order_error(e.error)
     end
@@ -36,9 +37,9 @@ module Juno
 
     def set_order_error(error)
       if error.present? && PAYMENT_ERROR_CODES.include?(error.first['error_code'])
-        @order.update!(status: :payment_denied)
+        set_payment_denied_error(error.first['message'])
       else
-        @order.update!(status: :processing_error)
+        set_generic_error
       end
     end
 
@@ -53,6 +54,16 @@ module Juno
       charge = Juno::Charge.find_by(key: payment[:charge])
       payment.merge!(charge: charge)
       Juno::CreditCardPayment.create!(payment)
+    end
+
+    def set_payment_denied_error(message)
+      @order.update!(status: :payment_denied)
+      CheckoutMailer.with(order: @order).payment_error(message).deliver_later
+    end
+
+    def set_generic_error
+      @order.update!(status: :processing_error)
+      CheckoutMailer.with(order: @order).generic_error.deliver_later
     end
   end
 end
