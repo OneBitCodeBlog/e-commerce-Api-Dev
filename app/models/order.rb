@@ -15,9 +15,9 @@ class Order < ApplicationRecord
   validates :total_amount, presence: true, numericality: { greater_than: 0 }
   validates :payment_type, presence: true
   validates :installments, presence: true, numericality: { only_integer: true, greater_than: 0 }
-  validates :document, presence: true, cpf_cnpj: true
+  validates :document, presence: true, cpf_cnpj: true, on: :create
 
-  with_options if: ->{ credit_card? } do
+  with_options if: ->{ credit_card? }, on: :create do
     validates :card_hash, presence: true
     validates :address, presence: true
     validates_associated :address

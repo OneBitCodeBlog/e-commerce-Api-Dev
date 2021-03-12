@@ -16,7 +16,7 @@ RSpec.describe Order, type: :model do
   it { is_expected.to define_enum_for(:payment_type).with_values({ credit_card: 1, billet: 2 }) }
   it { is_expected.to validate_presence_of(:installments) }
   it { is_expected.to validate_numericality_of(:installments).only_integer.is_greater_than(0) }
-  it { is_expected.to validate_presence_of(:document) }
+  it { is_expected.to validate_presence_of(:document).on(:create) }
 
   it { is_expected.to have_many :line_items }
   it { is_expected.to belong_to :user }
@@ -46,7 +46,7 @@ RSpec.describe Order, type: :model do
     expect(subject.status).to eq "processing_order"
   end
 
-  context "when :payment_type is :credit_card" do
+  context "when :payment_type is :credit_card and is on :create process" do
     it "validates :card_hash presence" do
       subject = build(:order, payment_type: :credit_card, card_hash: nil)
       subject.validate
