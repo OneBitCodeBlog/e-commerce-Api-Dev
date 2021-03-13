@@ -1,6 +1,8 @@
 require 'sidekiq/web'
+require_relative '../lib/middlewares/static_token_auth'
 
 Rails.application.routes.draw do
+  Sidekiq::Web.use StaticTokenAuth
   mount Sidekiq::Web => '/sidekiq'
 
   mount_devise_token_auth_for 'User', at: 'auth/v1/user'
