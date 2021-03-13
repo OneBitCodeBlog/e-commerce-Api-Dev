@@ -12,14 +12,16 @@ describe StaticTokenAuth do
   end
 
   it "returns 401 when token is invalid" do
-    env_mock = Rack::MockRequest.env_for("my.testing.com?token=some_random_token")
+    env_mock = Rack::MockRequest.env_for("my.testing.com")
+    env_mock['action_dispatch.request.path_parameters'] = { token: 'some_random_token' }
     middleware = described_class.new(app)
     response = middleware.call(env_mock)
     expect(response.first).to eq 401
   end
 
   it "returns 200 when token is valid" do
-    env_mock = Rack::MockRequest.env_for("my.testing.com?token=#{token}")
+    env_mock = Rack::MockRequest.env_for("my.testing.com")
+    env_mock['action_dispatch.request.path_parameters'] = { token: token }
     middleware = described_class.new(app)
     response = middleware.call(env_mock)
     expect(response.first).to eq 200

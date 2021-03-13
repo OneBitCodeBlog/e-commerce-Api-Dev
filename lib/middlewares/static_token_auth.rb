@@ -6,9 +6,10 @@ class StaticTokenAuth
   end
 
   def call(env)
-    status, headers, response = @app.call(env)
-    request = Rack::Request.new(env)
-    return [status, headers, response] if request.params['token'] == TOKEN_TO_VERIFY
+    token = env.dig('action_dispatch.request.path_parameters', :token)
+    if token == TOKEN_TO_VERIFY
+      return @app.call(env)
+    end
     [401, {}, ['Invalid Token']]
   end
 end
