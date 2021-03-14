@@ -8,6 +8,7 @@ RSpec.describe LineItem, type: :model do
 
   it { is_expected.to belong_to :order }
   it { is_expected.to belong_to :product }
+  it { is_expected.to have_many :licenses }
 
   it "#total must be :payed_price multiplied by :quantity" do
     payed_price = 153.32
