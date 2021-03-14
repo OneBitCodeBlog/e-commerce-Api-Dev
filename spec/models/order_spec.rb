@@ -73,4 +73,6 @@ RSpec.describe Order, type: :model do
       order.save!
     end.to have_enqueued_job(Juno::ChargeCreationJob).with(order, order_params)
   end
+
+  it_behaves_like "paginatable concern", :order
 end
