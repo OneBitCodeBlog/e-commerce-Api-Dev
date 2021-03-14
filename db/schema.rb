@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_03_06_200906) do
+ActiveRecord::Schema.define(version: 2021_03_14_134141) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -93,7 +93,9 @@ ActiveRecord::Schema.define(version: 2021_03_06_200906) do
     t.bigint "game_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.bigint "line_item_id"
     t.index ["game_id"], name: "index_licenses_on_game_id"
+    t.index ["line_item_id"], name: "index_licenses_on_line_item_id"
   end
 
   create_table "line_items", force: :cascade do |t|
@@ -193,6 +195,7 @@ ActiveRecord::Schema.define(version: 2021_03_06_200906) do
   add_foreign_key "juno_charges", "orders"
   add_foreign_key "juno_credit_card_payments", "juno_charges", column: "charge_id"
   add_foreign_key "licenses", "games"
+  add_foreign_key "licenses", "line_items"
   add_foreign_key "line_items", "orders"
   add_foreign_key "line_items", "products"
   add_foreign_key "orders", "coupons"
