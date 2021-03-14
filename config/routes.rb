@@ -15,6 +15,7 @@ Rails.application.routes.draw do
       resources :games, only: [], shallow: true do
         resources :licenses
       end
+      resources :orders, only: [:index, :show]
       resources :products
       resources :system_requirements
       resources :users
