@@ -26,7 +26,7 @@ class Order < ApplicationRecord
   end
 
   enum status: { processing_order: 1, processing_error: 2, waiting_payment: 3,
-                 payment_accepted: 4, payment_denied: 5, delivered: 6 }
+                 payment_accepted: 4, payment_denied: 5, finished: 6 }
 
   enum payment_type: { credit_card: 1, billet: 2 }
 
