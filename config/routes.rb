@@ -1,4 +1,5 @@
 require 'sidekiq/web'
+require 'sidekiq-scheduler/web'
 require_relative '../lib/middlewares/static_token_auth'
 
 Rails.application.routes.draw do
