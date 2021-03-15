@@ -8,6 +8,7 @@ module Admin
       licenses = @line_item.product.productable.licenses.where(status: :available).take(@line_item.quantity)
       License.transaction { update_licenses(licenses) }
       send_licenses
+      @line_item.update!(status: :delivered)
     end
 
     private

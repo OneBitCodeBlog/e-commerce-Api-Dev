@@ -18,6 +18,12 @@ describe Admin::AlocateLicensesService do
       expect(licenses_status).to eq ['in_use']
     end
 
+    it "line item receives :delivered status" do
+      described_class.new(line_item).call
+      line_item.reload
+      expect(line_item.status).to eq 'delivered'
+    end
+
     it "send an email for each allocated license" do
       described_class.new(line_item).call
       line_item.licenses.each do |license|
