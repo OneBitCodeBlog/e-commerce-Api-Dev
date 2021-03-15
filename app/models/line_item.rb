@@ -9,4 +9,8 @@ class LineItem < ApplicationRecord
   def total
     self.payed_price * self.quantity
   end
+
+  def ship!
+    self.product.productable.ship!(self)
+  end
 end

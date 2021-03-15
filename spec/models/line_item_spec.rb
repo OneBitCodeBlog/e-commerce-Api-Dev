@@ -17,4 +17,11 @@ RSpec.describe LineItem, type: :model do
     expected_value = payed_price * quantity
     expect(subject.total).to eq expected_value
   end
+
+  it "#ship! must forward to :productable #ship! method" do
+    line_item = create(:line_item)
+    productable = line_item.product.productable
+    expect(productable).to receive(:ship!).with(line_item)
+    line_item.ship!
+  end
 end
