@@ -11,4 +11,12 @@ RSpec.describe Game, type: :model do
   it { is_expected.to have_many :licenses }
 
   it_has_behavior_of "like searchable concern", :game, :developer
+
+  it "#ship! must schedule job AlocateLicenseJob sending Line Item" do
+    subject.product = create(:product)
+    line_item = create(:line_item, product: subject.product)
+    expect do
+      subject.ship!(line_item)
+    end.to have_enqueued_job(Admin::AlocateLicenseJob).with(line_item)
+  end
 end
