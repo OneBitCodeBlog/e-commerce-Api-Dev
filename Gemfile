@@ -18,6 +18,7 @@ gem 'rack-cors', '~> 1.1.1'
 
 # Delayed Jobs
 gem "sidekiq", '~> 6.1.3'
+gem "sidekiq-scheduler", '~> 3.0.1'
 
 # Rendering
 gem 'jbuilder', '~> 2.10.1'
