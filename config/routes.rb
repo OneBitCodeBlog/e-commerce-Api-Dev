@@ -20,6 +20,10 @@ Rails.application.routes.draw do
       resources :products
       resources :system_requirements
       resources :users
+
+      namespace :dashboard do
+        resources :summaries, only: :index
+      end
     end
   end
 
