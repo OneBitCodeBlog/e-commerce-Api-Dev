@@ -23,6 +23,7 @@ Rails.application.routes.draw do
 
       namespace :dashboard do
         resources :summaries, only: :index
+        resources :top_five_products, only: :index
       end
     end
   end
