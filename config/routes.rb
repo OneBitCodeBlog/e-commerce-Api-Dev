@@ -22,6 +22,7 @@ Rails.application.routes.draw do
       resources :users
 
       namespace :dashboard do
+        resources :sales_ranges, only: :index
         resources :summaries, only: :index
         resources :top_five_products, only: :index
       end
