@@ -35,7 +35,11 @@ RSpec.describe "Admin V1 Dashboard Top Five Products as :admin", type: :request 
       get url, headers: auth_header(user), params: params
       expected_result = top_five_line_itens.reverse.map do |line_item|
         total_sold = line_item.quantity * line_item.payed_price
-        { 'product' => line_item.product.name, 'quantity' => line_item.quantity, 'total_sold' => total_sold }
+        product = line_item.product
+        { 
+          'product' => product.name, 'image' => rails_blob_path(product.image), 
+          'quantity' => line_item.quantity, 'total_sold' => total_sold.to_f
+        }
       end
       expect(body_json['top_five_products']).to eq expected_result
     end

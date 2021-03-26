@@ -12,7 +12,7 @@ module Admin::Dashboard
 
     def call
       @records = search_top_five.map do |product|
-        { product: product.first, total_sold: product.second, quantity: product.third }
+        build_product_hash(product)
       end
       @records
     end
@@ -22,9 +22,18 @@ module Admin::Dashboard
     def search_top_five
       range_date_orders = Order.where(status: :finished, created_at: @min_date..@max_date)
       Product.joins(line_items: :order).merge(range_date_orders).group(:id)
-             .order(line_item_arel[:total_sold].desc, line_item_arel[:quantity_sum].desc)
+             .order('total_sold DESC, total_qty DESC')
              .limit(NUMBER_OF_RECORDS)
-             .pluck(:name, line_item_arel[:total_sold], line_item_arel[:quantity_sum])
+             .select(:id, :name, line_item_arel[:sold].as('total_sold'), line_item_arel[:quantity].as('total_qty'))
+    end
+
+    def build_product_hash(product)
+      { 
+        product: product.name, 
+        image: Rails.application.routes.url_helpers.rails_blob_path(product.image, only_path: false), 
+        total_sold: product.total_sold, 
+        quantity: product.total_qty 
+      }
     end
 
     def line_item_arel
@@ -32,7 +41,7 @@ module Admin::Dashboard
       arel = LineItem.arel_table
       total_sold = (arel[:payed_price] * arel[:quantity]).sum
       quantity_sum = arel[:quantity].sum
-      @line_item_arel = { total_sold: total_sold, quantity_sum: quantity_sum }
+      @line_item_arel = { sold: total_sold, quantity: quantity_sum }
     end
   end
 end

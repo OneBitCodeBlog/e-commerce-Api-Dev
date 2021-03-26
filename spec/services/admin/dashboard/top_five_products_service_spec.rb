@@ -30,8 +30,7 @@ describe Admin::Dashboard::TopFiveProductsService do
 
     it "returns right sold products follwing range date" do
       expected_return = top_five_line_itens.reverse.map do |line_item|
-        total_sold = line_item.quantity * line_item.payed_price
-        { product: line_item.product.name, quantity: line_item.quantity, total_sold: total_sold }
+        build_product(line_item)
       end
       service = described_class.new(min: min_date, max: max_date)
       service.call
@@ -40,12 +39,18 @@ describe Admin::Dashboard::TopFiveProductsService do
 
     it "does not return any product out of range date" do
       unexpected_return = out_of_date_line_items.reverse.map do |line_item|
-        total_sold = line_item.quantity * line_item.payed_price
-        { product: line_item.product.name, quantity: line_item.quantity, total_sold: total_sold }
+        build_product(line_item)
       end
       service = described_class.new(min: min_date, max: max_date)
       service.call
       expect(service.records).to_not include *unexpected_return
     end
+  end
+
+  def build_product(line_item)
+    total_sold = line_item.quantity * line_item.payed_price
+    product = line_item.product
+    product_image = Rails.application.routes.url_helpers.rails_blob_path(product.image, only_path: false)
+    { product: product.name, image: product_image, quantity: line_item.quantity, total_sold: total_sold }
   end
 end
