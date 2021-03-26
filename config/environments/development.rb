@@ -37,6 +37,7 @@ Rails.application.configure do
   config.action_mailer.perform_caching = false
 
   config.action_mailer.default_url_options = { host: "http://localhost:3000" }
+  Rails.application.routes.default_url_options[:host] = "http://localhost:3000"
 
   config.action_mailer.delivery_method = :smtp
   config.action_mailer.smtp_settings = {
@@ -46,7 +47,7 @@ Rails.application.configure do
 
   # Print deprecation notices to the Rails logger.
   config.active_support.deprecation = :log
-
+  default_url_options[:host]
   # Raise an error on page load if there are pending migrations.
   config.active_record.migration_error = :page_load
 
