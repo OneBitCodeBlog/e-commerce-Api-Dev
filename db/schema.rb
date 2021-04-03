@@ -65,7 +65,7 @@ ActiveRecord::Schema.define(version: 2021_03_15_110855) do
   create_table "juno_charges", force: :cascade do |t|
     t.string "key"
     t.string "code"
-    t.integer "number"
+    t.string "number"
     t.decimal "amount", precision: 10, scale: 2
     t.string "status"
     t.string "billet_url"
@@ -112,7 +112,6 @@ ActiveRecord::Schema.define(version: 2021_03_15_110855) do
 
   create_table "orders", force: :cascade do |t|
     t.integer "status"
-    t.datetime "due_date"
     t.decimal "subtotal", precision: 10, scale: 2
     t.decimal "total_amount", precision: 10, scale: 2
     t.integer "payment_type"
