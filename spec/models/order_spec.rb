@@ -17,6 +17,7 @@ RSpec.describe Order, type: :model do
   it { is_expected.to validate_presence_of(:installments) }
   it { is_expected.to validate_numericality_of(:installments).only_integer.is_greater_than(0) }
 
+  it { is_expected.to have_many :line_items }
   it { is_expected.to belong_to :user }
   it { is_expected.to belong_to(:coupon).optional }
 
