@@ -16,6 +16,9 @@ gem 'devise_token_auth', '~> 1.1.4'
 # CORS
 gem 'rack-cors', '~> 1.1.1'
 
+# Validation
+gem 'cpf_cnpj', '~> 0.5.0'
+
 # Delayed Jobs
 gem "sidekiq", '~> 6.1.3'
 gem "sidekiq-scheduler", '~> 3.0.1'
