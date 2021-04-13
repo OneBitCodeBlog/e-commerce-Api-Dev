@@ -3,3 +3,4 @@ pt-BR:
     errors:
       messages:
         future_date: "deve ser uma data futura"
+        invalid_cpf_cnpj: "deve ser um CPF ou CNPJ válido"
