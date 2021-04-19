@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_04_18_225441) do
+ActiveRecord::Schema.define(version: 2021_04_19_111306) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -73,6 +73,17 @@ ActiveRecord::Schema.define(version: 2021_04_18_225441) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["order_id"], name: "index_juno_charges_on_order_id"
+  end
+
+  create_table "juno_credit_card_payments", force: :cascade do |t|
+    t.string "key"
+    t.datetime "release_date"
+    t.string "status"
+    t.string "reason"
+    t.bigint "charge_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["charge_id"], name: "index_juno_credit_card_payments_on_charge_id"
   end
 
   create_table "licenses", force: :cascade do |t|
@@ -179,6 +190,7 @@ ActiveRecord::Schema.define(version: 2021_04_18_225441) do
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "games", "system_requirements"
   add_foreign_key "juno_charges", "orders"
+  add_foreign_key "juno_credit_card_payments", "juno_charges", column: "charge_id"
   add_foreign_key "licenses", "games"
   add_foreign_key "line_items", "orders"
   add_foreign_key "line_items", "products"
