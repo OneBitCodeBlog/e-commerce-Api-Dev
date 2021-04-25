@@ -58,4 +58,7 @@ Rails.application.configure do
   # Use an evented file watcher to asynchronously detect changes in source code,
   # routes, locales, etc. This feature depends on the listen gem.
   config.file_watcher = ActiveSupport::EventedFileUpdateChecker
+
+  JUNO_AUTH_URL = "https://sandbox.boletobancario.com"
+  JUNO_RESOURCE_URL = "https://sandbox.boletobancario.com/api-integration"
 end

@@ -22,6 +22,9 @@ gem 'cpf_cnpj', '~> 0.5.0'
 # Rendering
 gem 'jbuilder', '~> 2.10.1'
 
+# HTTP Request
+gem 'httparty', '~> 0.18.1'
+
 group :development, :test do
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
   gem 'factory_bot_rails'
