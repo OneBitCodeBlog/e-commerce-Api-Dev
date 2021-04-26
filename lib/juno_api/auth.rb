@@ -19,8 +19,6 @@ module JunoApi
 
     private
 
-    attr_writer :access_token, :expires_in
-
     def self.wait_until_process_is_done
       while @processing
         sleep SECONDS_TO_WAIT_PROCESSING
