@@ -26,4 +26,10 @@ Rails.application.routes.draw do
       resources :wish_items, only: [:index, :create, :destroy]
     end
   end
+
+  namespace :juno do
+    namespace :v1 do
+      resources :payment_confirmations, only: :create
+    end
+  end
 end
