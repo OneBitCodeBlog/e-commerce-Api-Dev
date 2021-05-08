@@ -1,0 +1,8 @@
+pt-BR:
+  license_mailer:
+    send_license:
+      subject: Licença liberada! \o/
+      title: A sua licença foi liberada
+      body: |
+        A licença para o jogo %{game_name} que você comprou está abaixo. Basta você copiar e adicionar 
+        na sua plataforma jogos
