@@ -10,6 +10,7 @@ RSpec.describe LineItem, type: :model do
 
   it { is_expected.to belong_to :order }
   it { is_expected.to belong_to :product }
+  it { is_expected.to have_many :licenses }
 
   it "receives :waiting_order status as default on creation" do
     subject = create(:line_item, status: nil)
