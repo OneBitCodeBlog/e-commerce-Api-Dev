@@ -34,7 +34,8 @@ module Storefront
 
     def validate_coupon
       return unless @params.has_key?(:coupon_id)
-      Coupon.find(@params[:coupon_id]).validate_use!
+      @coupon = Coupon.find(@params[:coupon_id])
+      @coupon.validate_use!
     rescue Coupon::InvalidUse, ActiveRecord::RecordNotFound
       @errors[:coupon] = I18n.t('storefront/checkout_processor_service.errors.coupon.invalid') 
     end
@@ -49,19 +50,33 @@ module Storefront
     def create_order
       Order.transaction do
         @order = instantiate_order
-        @order.save!
-        @params[:items].each { |line_item_params| @order.line_items.create!(line_item_params) }
+        line_items = @params[:items].map { |line_item_params| instantiate_line_items(line_item_params) }
+        save!(line_items)
       end
     rescue ArgumentError => e
       @errors[:base] = e.message
     end
 
     def instantiate_order
-      order_params = @params.slice(:document, :subtotal, :total_amount, :payment_type, :installments, :card_hash, 
-                                   :coupon_id, :user_id)
+      order_params = @params.slice(:document, :payment_type, :installments, :card_hash, :coupon_id, :user_id)
       order = Order.new(order_params)
       order.address = Address.new(@params[:address])
       order
+    end
+
+    def instantiate_line_items(line_item_params)
+      line_item = @order.line_items.build(line_item_params)
+      line_item.payed_price = line_item.product.price if line_item.product.present?
+      line_item.validate!
+      line_item
+    end
+
+    def save!(line_items)
+      @order.subtotal = line_items.sum(&:total).floor(2)
+      @order.total_amount = (@order.subtotal * (1 - @coupon.discount_value / 100)).floor(2) if @coupon.present?
+      @order.total_amount ||= @order.subtotal
+      @order.save!
+      line_items.each(&:save!)
     end
   end
 end
