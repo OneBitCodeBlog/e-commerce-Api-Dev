@@ -15,8 +15,8 @@ module Storefront::V1
     end
 
     def checkout_params
-      params.require(:checkout).permit(:subtotal, :total_amount, :payment_type, :installments, :coupon, :card_hash,
-                                       :document, items: [:quantity, :payed_price, :product_id],
+      params.require(:checkout).permit(:payment_type, :installments, :coupon_id, :card_hash,
+                                       :document, items: [:quantity, :product_id],
                                        address: [:street, :number, :city, :state, :post_code])
                                .reverse_merge(user_id: current_user.id, installments: 1)
     end

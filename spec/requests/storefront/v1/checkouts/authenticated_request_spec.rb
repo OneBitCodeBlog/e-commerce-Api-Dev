@@ -52,8 +52,7 @@ RSpec.describe "Storefront V1 Checkout as authenticated user", type: :request do
       let(:invalid_params) do
         { 
           checkout: { 
-            subtotal: 0, total_amount: 540.71, payment_type: :credit_card, installments: 2,
-            document: '03.000.050/0001-67',
+            installments: 2, document: '03.000.050/0001-67',
             items: [
               { quantity: 2, payed_price: 150.31, product_id: products.first.id },
               { quantity: 3, payed_price: 140.11, product_id: products.second.id }
@@ -76,7 +75,7 @@ RSpec.describe "Storefront V1 Checkout as authenticated user", type: :request do
 
       it 'returns error message' do
         post url, headers: auth_header, params: invalid_params
-        expect(body_json['errors']['fields']).to have_key('subtotal')
+        expect(body_json['errors']['fields']).to have_key('payment_type')
       end
 
       it 'returns unprocessable_entity status' do
