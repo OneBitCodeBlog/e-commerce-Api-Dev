@@ -1,5 +1,3 @@
-require 'rails_helper'
-
 RSpec.describe "Storefront V1 Checkout as authenticated user", type: :request do
   let(:user) { create(:user, [:admin, :client].sample) }
   
@@ -12,11 +10,11 @@ RSpec.describe "Storefront V1 Checkout as authenticated user", type: :request do
       let(:params) do
         { 
           checkout: { 
-            subtotal: 720.95, total_amount: 540.71, payment_type: :credit_card, installments: 2,
+           payment_type: :credit_card, installments: 2,
             document: '03.000.050/0001-67', card_hash: "123456", address: attributes_for(:address),
             items: [
-              { quantity: 2, payed_price: 150.31, product_id: products.first.id },
-              { quantity: 3, payed_price: 140.11, product_id: products.second.id }
+              { quantity: 2, product_id: products.first.id },
+              { quantity: 3, product_id: products.second.id }
             ]
           }
         }.to_json
@@ -54,8 +52,8 @@ RSpec.describe "Storefront V1 Checkout as authenticated user", type: :request do
           checkout: { 
             installments: 2, document: '03.000.050/0001-67',
             items: [
-              { quantity: 2, payed_price: 150.31, product_id: products.first.id },
-              { quantity: 3, payed_price: 140.11, product_id: products.second.id }
+              { quantity: 2, product_id: products.first.id },
+              { quantity: 3, product_id: products.second.id }
             ]
           }
         }.to_json
