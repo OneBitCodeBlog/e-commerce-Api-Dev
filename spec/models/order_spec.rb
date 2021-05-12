@@ -73,4 +73,20 @@ RSpec.describe Order, type: :model do
       order.save!
     end.to have_enqueued_job(Juno::ChargeCreationJob).with(order, order_params)
   end
+
+  it "call :line_item #ship! when receives :payment_accepted status" do
+    order = create(:order)
+    line_item = create(:line_item, order: order)
+    allow(order).to receive(:line_items).and_return([line_item])
+    expect(line_item).to receive(:ship!)
+    order.update!(status: :payment_accepted)
+  end
+  
+  it "does not call :line_item #ship! when receives any other update" do
+    order = create(:order, status: :payment_accepted)
+    line_item = create(:line_item, order: order)
+    allow(order).to receive(:line_items).and_return([line_item])
+    expect(line_item).to_not receive(:ship!)
+    order.update!(subtotal: 30)
+  end
 end
