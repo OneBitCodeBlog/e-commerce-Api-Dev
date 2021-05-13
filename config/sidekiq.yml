@@ -1,0 +1,3 @@
+:schedule:
+  Admin::FinishDeliveredOrdersJob:
+    every: ['1h', first_in: '2m']
