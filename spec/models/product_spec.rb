@@ -7,6 +7,7 @@ RSpec.describe Product, type: :model do
   it { is_expected.to have_many(:product_categories).dependent(:destroy) }
   it { is_expected.to have_many(:categories).through(:product_categories) }
   it { is_expected.to have_many(:wish_items) }
+  it { is_expected.to have_many(:line_items) }
   
   it { is_expected.to validate_presence_of(:name) }
   it { is_expected.to validate_uniqueness_of(:name).case_insensitive }
