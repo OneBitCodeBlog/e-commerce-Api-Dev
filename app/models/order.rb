@@ -1,4 +1,6 @@
 class Order < ApplicationRecord
+  include Paginatable
+  
   DAYS_TO_DUE = 7
 
   attribute :address
