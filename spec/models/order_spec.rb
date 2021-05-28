@@ -89,4 +89,6 @@ RSpec.describe Order, type: :model do
     expect(line_item).to_not receive(:ship!)
     order.update!(subtotal: 30)
   end
+
+  it_behaves_like "paginatable concern", :order
 end
