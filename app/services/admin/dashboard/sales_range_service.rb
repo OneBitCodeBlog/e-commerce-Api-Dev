@@ -1,7 +1,5 @@
 module Admin::Dashboard
   class SalesRangeService
-    NUMBER_OF_RECORDS = 5
-
     attr_reader :records
 
     def initialize(min: nil, max: nil)
