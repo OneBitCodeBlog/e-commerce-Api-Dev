@@ -11,10 +11,6 @@ module Admin::V1
 
     private
 
-    def load_order
-      @order = Order.find(params[:id])
-    end
-
     def searchable_params
       params.permit({ order: {} }, :page, :length)
     end
