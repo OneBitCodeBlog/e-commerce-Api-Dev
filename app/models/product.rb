@@ -20,6 +20,6 @@ class Product < ApplicationRecord
   enum status: { available: 1, unavailable: 2 }
 
   def sells_count
-    self.line_items.joins(:order).where(orders: { status: :finished }).sum(:quantity)
+    LineItem.joins(:order).where(orders: { status: :finished }, product: self).sum(:quantity)
   end
 end
