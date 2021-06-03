@@ -17,4 +17,8 @@ class Product < ApplicationRecord
   validates :featured, presence: true, if: -> { featured.nil? }
 
   enum status: { available: 1, unavailable: 2 }
+
+  def sells_count
+    LineItem.joins(:order).where(orders: { status: :finished }, product: self).sum(:quantity)
+  end
 end
