@@ -27,4 +27,12 @@ RSpec.describe Product, type: :model do
     subject.save(validate: false)
     expect(subject.featured).to be_falsey
   end
+
+  it "#sells_count returns quantity product was sold" do
+    order = create(:order)
+    order.update(status: :finished)
+    product = create(:product)
+    create_list(:line_item, 2, quantity: 3, product: product, order: order)
+    expect(product.sells_count).to eq 6
+  end
 end
