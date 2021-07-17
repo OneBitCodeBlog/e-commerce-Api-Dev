@@ -31,11 +31,12 @@ if Rails.env.development? || Rails.env.test?
         availability = [:available, :unavailable].sample
         categories_count = rand(0..3)
         featured = [true, false].sample
+        price = Faker::Commerce.price(range: 5.0..30.0)
         release_date =  (0..15).to_a.sample.days.ago
         game_categories_ids = []
         categories_count.times { game_categories_ids << Category.all.sample.id }
         game = create(:game, system_requirement: system_requirements.sample, release_date: release_date)
-        create(:product, name: game_name, status: availability, featured: featured,
+        create(:product, name: game_name, status: availability, featured: featured, price: price,
                          category_ids: game_categories_ids, productable: game)
       end
 
