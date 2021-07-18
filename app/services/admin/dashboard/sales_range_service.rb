@@ -21,6 +21,7 @@ module Admin::Dashboard
     def group_sales_by_day
       order_filter
         .group("year, month, day")
+        .order("year, month, day")
         .pluck(order_arel[:year], order_arel[:month], order_arel[:day], line_item_arel[:total_sold])
         .map { |record| { date: format_date(*record[0..2]), total_sold: record[3].to_f } }
     end
@@ -28,12 +29,14 @@ module Admin::Dashboard
     def group_sales_by_month
       order_filter
         .group("year, month")
+        .order("year, month")
         .pluck(order_arel[:year], order_arel[:month], line_item_arel[:total_sold])
         .map { |record| { date: format_date(*record[0..1]), total_sold: record[2].to_f } }
     end
 
     def order_filter
-      Order.joins(:line_items).where(status: :finished, created_at: @min_date..@max_date)
+      Order.joins(:line_items)
+           .where(status: :finished, created_at: @min_date..@max_date)
     end
 
     def format_date(year, month, day = nil)
