@@ -87,6 +87,7 @@ RSpec.describe "Admin V1 Orders as :admin", type: :request do
       get url, headers: auth_header(user)
       expected_line_items = line_items.map do |line_item|
         formatted = line_item.as_json(only: %i[quantity payed_price])
+        formatted ['image_url'] = rails_blob_url(line_item.product.image)
         formatted['product'] = line_item.product.name
         formatted
       end
