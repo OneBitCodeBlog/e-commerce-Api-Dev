@@ -10,9 +10,9 @@ module Admin::Dashboard
 
     def call
       if @max_date.present? && @min_date.present? && @max_date - @min_date < 1.month
-        @records = group_sales_by_day.to_h
+        @records = group_sales_by_day
       else
-        @records = group_sales_by_month.to_h
+        @records = group_sales_by_month
       end
     end
 
@@ -22,14 +22,14 @@ module Admin::Dashboard
       order_filter
         .group("year, month, day")
         .pluck(order_arel[:year], order_arel[:month], order_arel[:day], line_item_arel[:total_sold])
-        .map { |record| [format_date(*record[0..2]), record[3]] }
+        .map { |record| { date: format_date(*record[0..2]), total_sold: record[3].to_f } }
     end
 
     def group_sales_by_month
       order_filter
         .group("year, month")
         .pluck(order_arel[:year], order_arel[:month], line_item_arel[:total_sold])
-        .map { |record| [format_date(*record[0..1]), record[2]] }
+        .map { |record| { date: format_date(*record[0..1]), total_sold: record[2].to_f } }
     end
 
     def order_filter

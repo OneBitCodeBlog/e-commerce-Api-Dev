@@ -20,8 +20,8 @@ describe Admin::Dashboard::SalesRangeService do
         expected_return = sales_line_items.map do |line_item|
           day = line_item.order.created_at.strftime("%Y-%m-%d")
           total_sold = line_item.payed_price * line_item.quantity
-          [day, total_sold]
-        end.to_h
+          { date: day, total_sold: total_sold.to_f }
+        end
         service = described_class.new(min: min_date, max: max_date)
         service.call
         expect(service.records).to eq expected_return
@@ -46,8 +46,8 @@ describe Admin::Dashboard::SalesRangeService do
         expected_return = sales_line_items.map do |line_item|
           month = line_item.order.created_at.strftime("%Y-%m")
           total_sold = line_item.payed_price * line_item.quantity
-          [month, total_sold]
-        end.to_h
+          { date: month, total_sold: total_sold.to_f }
+        end
         service = described_class.new(min: min_date, max: max_date)
         service.call
         expect(service.records).to eq expected_return
