@@ -24,8 +24,8 @@ RSpec.describe "Admin V1 Dashboard Sales Ranges as :admin", type: :request do
         expected_result = sales_line_items.map do |line_item|
           day = line_item.order.created_at.strftime("%Y-%m-%d")
           total_sold = line_item.payed_price * line_item.quantity
-          [day, total_sold.to_f]
-        end.to_h
+          { "date" => day, "total_sold" => total_sold.to_f }
+        end
         expect(body_json['sales_ranges']).to eq expected_result
       end
 
@@ -51,10 +51,10 @@ RSpec.describe "Admin V1 Dashboard Sales Ranges as :admin", type: :request do
       it "returns products in a monthly basis" do
         get url, headers: auth_header(user), params: params
         expected_result = sales_line_items.map do |line_item|
-          day = line_item.order.created_at.strftime("%Y-%m")
+          month = line_item.order.created_at.strftime("%Y-%m")
           total_sold = line_item.payed_price * line_item.quantity
-          [day, total_sold.to_f]
-        end.to_h
+          { "date" => month, "total_sold" => total_sold.to_f }
+        end
         expect(body_json['sales_ranges']).to eq expected_result
       end
 
