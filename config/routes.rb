@@ -26,7 +26,7 @@ Rails.application.routes.draw do
     end
   end
 
-  namespace :storefront do
+  namespace :storefront, defaults: { format: :json } do
     namespace :v1 do
       get "home" => "home#index"
       resources :products, only: [:index, :show]
