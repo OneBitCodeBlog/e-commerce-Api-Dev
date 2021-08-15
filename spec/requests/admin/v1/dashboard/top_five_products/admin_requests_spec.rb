@@ -37,7 +37,7 @@ RSpec.describe "Admin V1 Dashboard Top Five Products as :admin", type: :request 
         total_sold = line_item.quantity * line_item.payed_price
         product = line_item.product
         { 
-          'product' => product.name, 'image' => rails_blob_path(product.image), 
+          'product' => product.name, 'image' => rails_blob_url(product.image, host: "localhost", port: 3000), 
           'quantity' => line_item.quantity, 'total_sold' => total_sold.to_f
         }
       end

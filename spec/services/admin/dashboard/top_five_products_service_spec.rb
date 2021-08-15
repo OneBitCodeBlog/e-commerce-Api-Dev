@@ -50,7 +50,7 @@ describe Admin::Dashboard::TopFiveProductsService do
   def build_product(line_item)
     total_sold = line_item.quantity * line_item.payed_price
     product = line_item.product
-    product_image = Rails.application.routes.url_helpers.rails_blob_path(product.image, only_path: false)
+    product_image = Rails.application.routes.url_helpers.rails_blob_url(product.image, host: "localhost", port: 3000)
     { product: product.name, image: product_image, quantity: line_item.quantity, total_sold: total_sold }
   end
 end

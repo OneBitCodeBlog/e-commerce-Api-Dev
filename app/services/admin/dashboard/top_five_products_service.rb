@@ -30,7 +30,7 @@ module Admin::Dashboard
     def build_product_hash(product)
       { 
         product: product.name, 
-        image: Rails.application.routes.url_helpers.rails_blob_path(product.image, only_path: false), 
+        image: Rails.application.routes.url_helpers.rails_blob_url(product.image), 
         total_sold: product.total_sold, 
         quantity: product.total_qty 
       }
